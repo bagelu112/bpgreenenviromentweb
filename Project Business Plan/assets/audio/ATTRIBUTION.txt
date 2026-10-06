@@ -1,0 +1,9 @@
+﻿Narasi audio Bahasa Indonesia
+
+Voice generation model: id_ID-news_tts-medium from rhasspy/piper-voices.
+Model files: https://huggingface.co/rhasspy/piper-voices/tree/main/id/id_ID/news_tts/medium
+Repository license: MIT (see https://huggingface.co/rhasspy/piper-voices/blob/main/LICENSE)
+
+The individual model card identifies its dataset as news_tts and points to an external dataset-license page. Check that dataset's terms before using this prototype in a commercial product. The model card is available in the linked model folder as MODEL_CARD.
+
+The seven MP3 files are narrated Indonesian walkthrough audio. They are served by this website and do not require browser or operating-system speech voices. Each file is loaded when its step is played.
