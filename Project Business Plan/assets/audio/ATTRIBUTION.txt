@@ -1,0 +1,6 @@
+Narasi audio Bahasa Indonesia
+
+Voice: id-ID-ArdiNeural, generated with the edge-tts client.
+The MP3 files are static website assets. Playing them does not require a browser speech voice.
+
+Generation sends narration text to Microsoft's online text-to-speech service. Review the service terms before commercial use. The source study data shown elsewhere in the walkthrough is separately attributed in the interface.
