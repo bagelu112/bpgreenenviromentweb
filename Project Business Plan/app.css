@@ -101,4 +101,267 @@
 .bond-demo{display:grid;gap:6px;margin-top:14px;padding:11px;border:1px solid #304137;border-radius:9px;background:#121b15}.bond-demo b{font-size:11px;color:#dff3cf}.bond-demo span{font:500 12px 'DM Mono';color:#9be875}.bond-demo small{font-size:10px;line-height:1.55;color:#95a69a}.confidence-demo{margin-top:12px}
 
 .walkthrough-shell{margin-top:14px;padding:18px;border:1px solid #34463b;border-radius:16px;background:linear-gradient(145deg,#141e18,#101713 62%,#131c16);box-shadow:0 18px 48px #0003}.walkthrough-shell .tour-hero{margin-top:0!important}.walkthrough-shell .tour-hero>.card,.walkthrough-shell .demo-panel,.walkthrough-shell>.residue-product-panel{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0}.walkthrough-shell .tour-layout{gap:24px}.walkthrough-shell .demo-panels{padding-top:20px;border-top:1px solid #2c3b31}.walkthrough-shell .demo-panel{padding:18px 10px}.walkthrough-shell .residue-product-panel{margin-top:20px;padding:20px 10px 8px;border-top:1px solid #2c3b31!important}.walkthrough-shell .stage-focus{box-shadow:none!important}.walkthrough-shell .demo-panel.stage-focus{background:linear-gradient(90deg,#9be87508,transparent)!important}@media(max-width:700px){.walkthrough-shell{padding:12px;border-radius:12px}.walkthrough-shell .demo-panel,.walkthrough-shell .residue-product-panel{padding:14px 2px}.walkthrough-shell .tour-layout{gap:14px}}
-.stage-report{position:absolute;z-index:5;top:42px;right:12px;width:min(370px,44%);max-height:calc(100% - 78px);overflow:auto;border:1px solid #45634d;border-radius:12px;background:rgba(12,20,15,.96);box-shadow:0 14px 38px #0009;backdrop-filter:blur(10px);color:#e7f1e8}.stage-report-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:13px 14px 8px}.stage-report-kicker{font:9px 'DM Mono';letter-spacing:.08em;color:#a6e785}.stage-report-head h3{margin:5px 0 0;font-size:14px;line-height:1.3}.report-toggle{flex:0 0 auto;border:1px solid #3e5845;border-radius:7px;background:#18251c;color:#c5dbbf;padding:6px 8px;font-size:10px;cursor:pointer}.stage-report-lead{margin:0;padding:0 14px 10px;color:#b9c9bb;font-size:11px;line-height:1.55}.stage-report-rows{display:grid;gap:6px;padding:0 14px}.stage-report-row{display:grid;grid-template-columns:minmax(85px,.8fr) minmax(0,1.3fr);gap:8px;padding:7px 0;border-top:1px solid #29382e;font-size:10px;line-height:1.4}.stage-report-row b{color:#a9e38c;font-weight:600}.stage-report-row span{color:#d0dbd1}.stage-report-note{margin:10px 14px;padding:9px;border-left:2px solid #cfb46c;background:#292719;color:#ddd2a7;font-size:10px;line-height:1.55}.stage-report-sources{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 13px}.stage-report-sources a{color:#9fdfbd;font-size:10px;text-decoration:underline;text-underline-offset:2px}.stage-report-sources a:hover{color:#d2ffc1}.stage-report [hidden]{display:none!important}@media(max-width:700px){.stage-report{top:auto;right:10px;bottom:36px;width:min(370px,calc(100vw - 48px));max-height:58%;border-radius:10px}.stage-report-head{padding:10px}.stage-report-lead{padding:0 10px 8px}.stage-report-rows{padding:0 10px}.stage-report-note{margin:8px 10px}.stage-report-sources{padding:0 10px 10px}.tour-scene{min-height:340px}}.report-drag-hint{display:none;margin-top:3px;color:#86998c;font-size:9px}.stage-report-head{cursor:default}.report-toggle{cursor:pointer}.stage-report.dragging{user-select:none;box-shadow:0 18px 42px #000b;border-color:#9be875}.stage-report.dragging .stage-report-head{cursor:grabbing}@media(max-width:700px){.stage-report{width:min(280px,calc(100% - 18px));max-height:48%;bottom:30px}.stage-report-head{cursor:grab;touch-action:none;padding:8px 9px 6px}.report-drag-hint{display:block}.stage-report-head h3{font-size:12px}.stage-report-kicker{font-size:8px}.report-toggle{padding:5px 7px;font-size:9px}.stage-report-lead{font-size:10px}.stage-report-row{grid-template-columns:minmax(74px,.75fr) minmax(0,1.25fr);font-size:9px;padding:5px 0}.stage-report-note{font-size:9px;padding:7px}.stage-report-sources a{font-size:9px}}
+.stage-report{position:absolute;z-index:5;top:42px;right:12px;width:min(370px,44%);max-height:calc(100% - 78px);overflow:auto;border:1px solid #45634d;border-radius:12px;background:rgba(12,20,15,.96);box-shadow:0 14px 38px #0009;backdrop-filter:blur(10px);color:#e7f1e8}.stage-report-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:13px 14px 8px}.stage-report-kicker{font:9px 'DM Mono';letter-spacing:.08em;color:#a6e785}.stage-report-head h3{margin:5px 0 0;font-size:14px;line-height:1.3}.report-toggle{flex:0 0 auto;border:1px solid #3e5845;border-radius:7px;background:#18251c;color:#c5dbbf;padding:6px 8px;font-size:10px;cursor:pointer}.stage-report-lead{margin:0;padding:0 14px 10px;color:#b9c9bb;font-size:11px;line-height:1.55}.stage-report-rows{display:grid;gap:6px;padding:0 14px}.stage-report-row{display:grid;grid-template-columns:minmax(85px,.8fr) minmax(0,1.3fr);gap:8px;padding:7px 0;border-top:1px solid #29382e;font-size:10px;line-height:1.4}.stage-report-row b{color:#a9e38c;font-weight:600}.stage-report-row span{color:#d0dbd1}.stage-report-note{margin:10px 14px;padding:9px;border-left:2px solid #cfb46c;background:#292719;color:#ddd2a7;font-size:10px;line-height:1.55}.stage-report-sources{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 13px}.stage-report-sources a{color:#9fdfbd;font-size:10px;text-decoration:underline;text-underline-offset:2px}.stage-report-sources a:hover{color:#d2ffc1}.stage-report [hidden]{display:none!important}@media(max-width:700px){.stage-report{top:auto;right:10px;bottom:36px;width:min(370px,calc(100vw - 48px));max-height:58%;border-radius:10px}.stage-report-head{padding:10px}.stage-report-lead{padding:0 10px 8px}.stage-report-rows{padding:0 10px}.stage-report-note{margin:8px 10px}.stage-report-sources{padding:0 10px 10px}.tour-scene{min-height:340px}}.report-drag-hint{display:none;margin-top:3px;color:#86998c;font-size:9px}.stage-report-head{cursor:default}.report-toggle{cursor:pointer}.stage-report.dragging{user-select:none;box-shadow:0 18px 42px #000b;border-color:#9be875}.stage-report.dragging .stage-report-head{cursor:grabbing}@media(max-width:700px){.stage-report{width:min(280px,calc(100% - 18px));max-height:48%;bottom:30px}.stage-report-head{cursor:grab;touch-action:none;padding:8px 9px 6px}.report-drag-hint{display:block}.stage-report-head h3{font-size:12px}.stage-report-kicker{font-size:8px}.report-toggle{padding:5px 7px;font-size:9px}.stage-report-lead{font-size:10px}.stage-report-row{grid-template-columns:minmax(74px,.75fr) minmax(0,1.25fr);font-size:9px;padding:5px 0}.stage-report-note{font-size:9px;padding:7px}.stage-report-sources a{font-size:9px}}/* Process map inspired by the supplied sketch */
+.process-map{display:grid;justify-items:center;gap:0;padding:clamp(18px,4vw,38px);overflow:hidden}
+.process-map-head{width:min(100%,900px);display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:0 auto 22px}
+.process-map-head .card-title{margin:9px 0 6px;font:700 clamp(18px,2.4vw,25px) Manrope,Arial,sans-serif}
+.process-map-head .caption{max-width:650px;margin:0;line-height:1.65}
+.map-explanation{position:relative;width:min(76%,700px);padding:17px 20px;border:2px solid #55c97b;border-radius:15px;background:linear-gradient(145deg,#14251a,#101913);box-shadow:0 0 24px #48d16b12}
+.map-explanation h3{margin:6px 0;color:#dff2de;font:700 15px Manrope,Arial,sans-serif}
+.map-explanation p{margin:0;color:#b9c8bc;font-size:12px;line-height:1.7}
+.map-step{color:#8ee38a;font:9px 'DM Mono',monospace;letter-spacing:.12em}
+.map-connector{width:3px;height:32px;background:linear-gradient(#5bd47b,#42ae77);position:relative}
+.map-down:after,.map-up:after{content:'';position:absolute;bottom:0;left:50%;width:9px;height:9px;border-right:2px solid #62d587;border-bottom:2px solid #62d587;transform:translateX(-50%) rotate(45deg)}
+.map-up:after{top:0;bottom:auto;transform:translateX(-50%) rotate(225deg)}
+.work-zone{position:relative;width:100%;max-width:1000px;min-height:250px;display:grid;grid-template-columns:minmax(0,1fr) 170px minmax(0,1fr);align-items:center;gap:20px;padding:44px clamp(18px,5vw,64px) 28px;border:2px solid #e45a60;border-radius:22px;background:linear-gradient(145deg,#171b19,#111513);box-shadow:inset 0 0 30px #df50500b}
+.work-zone-label{position:absolute;top:13px;left:50%;transform:translateX(-50%);padding:6px 13px;border:1px solid #573d3d;border-radius:99px;background:#201819;color:#ffd7d5;font:10px 'DM Mono',monospace;letter-spacing:.08em;white-space:nowrap}
+.map-tool{min-width:0;min-height:142px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 12px;border:2px solid #9849db;border-radius:18px;background:linear-gradient(150deg,#211629,#16151b);color:#e9e1ef;text-decoration:none;text-align:center;transition:transform .2s,border-color .2s,box-shadow .2s}
+.map-tool:hover,.map-tool:focus-visible{transform:translateY(-3px);border-color:#c581ff;box-shadow:0 10px 30px #a34be633;outline:none}
+.tool-icon{height:32px;display:flex;align-items:center;gap:4px}
+.tool-icon i{display:block;width:7px;height:21px;border-radius:5px;background:#72d7a4;box-shadow:0 0 10px #72d7a433}
+.tool-icon i:nth-child(2){height:30px;background:#9be875}.tool-icon i:nth-child(3){height:16px;background:#64c6bc}
+.filter-icon i{height:27px;border-radius:3px}.filter-icon i:nth-child(2){height:21px}.filter-icon i:nth-child(3){height:30px}
+.tool-name{font:700 13px Manrope,Arial,sans-serif}.tool-kind{color:#c88bfa;font:8px 'DM Mono',monospace;letter-spacing:.1em}.tool-desc{color:#aeb9b0;font-size:10px;line-height:1.45}.tool-link{margin-top:3px;color:#a9e68a;font-size:9px}
+.work-link{display:flex;align-items:center;justify-content:center;gap:8px;color:#d5e1d7;font-size:11px;text-align:center}.work-link-line{height:1px;flex:1;background:linear-gradient(90deg,transparent,#597160)}.work-link-line:last-child{background:linear-gradient(90deg,#597160,transparent)}
+.map-output{width:min(86%,800px)}
+.output-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:13px}
+.output-pair>div{padding:11px 12px;border:1px solid #2c4434;border-radius:10px;background:#111a14}
+.output-pair b{color:#d8edcf;font-size:11px}.output-pair p{margin-top:5px;font-size:10px}
+.map-disclaimer{width:min(100%,900px);margin:17px auto 0;color:#87958a;font-size:10px;line-height:1.6;text-align:center}
+.process-map-notes{width:100%;margin-top:15px}
+@media(max-width:700px){
+ .process-map{padding:16px 12px}
+ .process-map-head{display:grid;gap:12px;margin-bottom:16px}
+ .process-map-head .page-action{justify-self:start}
+ .map-explanation{width:94%;padding:14px}
+ .map-explanation h3{font-size:13px}.map-explanation p{font-size:11px}
+ .map-connector{height:25px}
+ .work-zone{min-height:0;grid-template-columns:minmax(0,1fr);gap:10px;padding:45px 16px 18px;border-radius:18px}
+ .map-tool{min-height:105px}
+ .work-link{min-height:25px}.work-link-line{max-width:42px}
+ .map-output{width:100%}
+ .output-pair{grid-template-columns:1fr;gap:8px;margin-top:10px}
+ .output-pair>div{padding:10px}
+}
+/* Seven distinct machine cards inside the process area */
+.work-zone{display:block;min-height:0;padding:48px clamp(16px,3vw,34px) 24px}
+.machine-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;align-items:stretch}
+.machine-grid .map-tool{min-height:174px;height:100%;justify-content:flex-start;padding:15px 11px}
+.machine-grid .tool-name{min-height:34px;display:flex;align-items:center;justify-content:center;line-height:1.35}
+.machine-grid .tool-desc{flex:1;max-width:220px}
+.machine-icon{position:relative;justify-content:center;min-width:40px}
+.machine-icon i{transition:transform .2s}
+.map-tool:hover .machine-icon i{transform:translateY(-2px)}
+.machine-1 i{height:17px}.machine-1 i:nth-child(2){height:29px}.machine-1 i:nth-child(3){height:22px}
+.machine-2 i{height:26px}.machine-2 i:nth-child(2){height:20px}.machine-2 i:nth-child(3){height:28px}
+.machine-3 i{width:9px;height:23px;border-radius:2px}.machine-3 i:nth-child(2){height:30px}.machine-3 i:nth-child(3){height:18px}
+.machine-4 i{width:6px;height:30px;border-radius:5px}.machine-4 i:nth-child(2){height:23px}.machine-4 i:nth-child(3){height:30px}
+.machine-5 i{width:12px;height:24px;border-radius:3px}.machine-5 i:nth-child(2){height:30px}.machine-5 i:nth-child(3){height:24px}
+.machine-6 i{width:11px;height:22px;border-radius:2px 2px 8px 8px;background:#d5bd76}.machine-6 i:nth-child(2){height:29px}.machine-6 i:nth-child(3){height:18px}
+.machine-7 i{width:12px;height:21px;border-radius:50% 50% 3px 3px;background:#a98ae6}.machine-7 i:nth-child(2){height:28px}.machine-7 i:nth-child(3){height:20px}
+@media(max-width:900px){.machine-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.work-zone{padding:46px 12px 15px}.machine-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.machine-grid .map-tool{min-height:155px;padding:12px 8px}.machine-grid .tool-name{font-size:11px;min-height:31px}.machine-grid .tool-desc{font-size:9px}.machine-grid .tool-kind,.machine-grid .tool-link{font-size:8px}}
+@media(max-width:360px){.machine-grid{grid-template-columns:minmax(0,1fr)}.machine-grid .map-tool{min-height:135px}}
+/* Vertical, readable timeline with one machine explanation per step */
+.timeline-zone{padding-bottom:30px}
+.process-timeline{position:relative;width:min(100%,900px);display:grid;gap:14px;margin:12px auto 0}
+.process-timeline:before{content:'';position:absolute;left:31px;top:20px;bottom:28px;width:2px;background:linear-gradient(#9be875,#52cda0 55%,#d5bd76)}
+.timeline-entry{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr);gap:15px;align-items:start;color:inherit;text-decoration:none}
+.timeline-marker{position:relative;z-index:1;display:grid;justify-items:center;gap:8px;padding-top:12px}
+.timeline-marker>b{width:38px;height:38px;display:grid;place-items:center;border:2px solid #85d77e;border-radius:50%;background:#14221a;color:#c9f2ad;font:700 11px 'DM Mono',monospace;box-shadow:0 0 0 5px #111713}
+.timeline-machine-icon{height:28px;display:flex;align-items:center;gap:3px}
+.timeline-machine-icon em{display:block;width:5px;height:17px;border-radius:4px;background:#55cfa3;box-shadow:0 0 10px #55cfa333}
+.timeline-machine-icon em:nth-child(2){height:25px;background:#a2e77d}.timeline-machine-icon em:nth-child(3){height:13px;background:#7ccbb4}
+.timeline-machine-icon.machine-2 em:nth-child(2),.timeline-machine-icon.machine-5 em:nth-child(2){height:14px}
+.timeline-machine-icon.machine-3 em{border-radius:1px;width:7px}.timeline-machine-icon.machine-4 em{width:3px;height:26px}
+.timeline-machine-icon.machine-6 em{background:#d5bd76}.timeline-machine-icon.machine-7 em{background:#b58bea;border-radius:50% 50% 2px 2px}
+.timeline-card{min-width:0;display:grid;gap:8px;padding:15px 17px;border:1px solid #34483b;border-radius:13px;background:linear-gradient(145deg,#17221a,#111713);transition:border-color .2s,transform .2s,box-shadow .2s}
+.timeline-entry:hover .timeline-card,.timeline-entry:focus-visible .timeline-card{transform:translateY(-2px);border-color:#83bf75;box-shadow:0 9px 24px #0004}
+.timeline-entry:focus-visible{outline:2px solid #9be875;outline-offset:4px;border-radius:12px}
+.timeline-meta{color:#9be875;font:9px 'DM Mono',monospace;letter-spacing:.08em}
+.timeline-machine{color:#e5f2e4;font:700 15px Manrope,Arial,sans-serif}
+.timeline-purpose{color:#d1dfd3;font-size:11px;line-height:1.6}
+.timeline-purpose b{color:#a9e68a}
+.timeline-detail{color:#aebdb1;font-size:11px;line-height:1.75}
+.timeline-open{justify-self:start;margin-top:2px;color:#9ce1b1;font-size:10px}
+@media(max-width:700px){
+ .timeline-zone{padding:44px 11px 20px}
+ .process-timeline{gap:10px;margin-top:8px}
+ .process-timeline:before{left:21px;top:16px;bottom:24px}
+ .timeline-entry{grid-template-columns:44px minmax(0,1fr);gap:9px}
+ .timeline-marker{gap:6px;padding-top:10px}
+ .timeline-marker>b{width:30px;height:30px;font-size:9px;box-shadow:0 0 0 4px #111713}
+ .timeline-machine-icon{transform:scale(.8)}
+ .timeline-card{gap:7px;padding:12px 11px;border-radius:11px}
+ .timeline-machine{font-size:13px}
+ .timeline-purpose,.timeline-detail{font-size:10px;line-height:1.65}
+ .timeline-meta,.timeline-open{font-size:8px}
+}
+/* Small machine illustrations for every timeline step */
+.timeline-card{grid-template-columns:minmax(125px,170px) minmax(0,1fr);align-items:center;gap:15px}
+.timeline-machine-picture{min-width:0;min-height:112px;display:grid;place-items:center;overflow:hidden;border:1px solid #2c4033;border-radius:10px;background:radial-gradient(ellipse at 50% 75%,#263d2b,#111813 78%)}
+.machine-picture-svg{display:block;width:100%;height:auto;max-height:132px}
+.machine-metal{fill:#40594a;stroke:#a9bbac;stroke-width:2}
+.machine-frame{fill:none;stroke:#748c79;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.machine-top{fill:#718778;stroke:#c0d0c2;stroke-width:2}
+.machine-water{fill:#3b9e85;opacity:.78}
+.machine-pipe{fill:none;stroke:#93a999;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.machine-screen{fill:#0c1711;stroke:#70c89b;stroke-width:2}
+.machine-light-line{fill:none;stroke:#95e07c;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.machine-light{fill:#b8f58b;filter:drop-shadow(0 0 4px #a5f37c)}
+.machine-vial,.machine-bottle{fill:#44796d;stroke:#acd1b5;stroke-width:1.5}
+.machine-filter{fill:#728b7b;stroke:#c4d3c6;stroke-width:1.5}.machine-filter.alt{fill:#345947}
+.machine-residue{fill:#9f8650;stroke:#d9c27c;stroke-width:1.5}
+.machine-product{fill:#b1a27b;stroke:#e7d7a3;stroke-width:1.5}
+.machine-shadow{fill:#050907;opacity:.55}
+.machine-svg-label{fill:#91a697;font:6px 'DM Mono',monospace;letter-spacing:.08em;text-anchor:middle}
+.timeline-copy{min-width:0;display:grid;gap:8px}
+@media(max-width:700px){
+ .timeline-card{grid-template-columns:minmax(0,1fr);gap:10px}
+ .timeline-machine-picture{grid-row:1;min-height:100px;max-height:125px}
+ .machine-picture-svg{width:min(100%,240px);max-height:122px}
+ .timeline-copy{grid-row:2;gap:7px}
+}
+/* Machine structure schematics and numbered component key */
+.timeline-card{grid-template-columns:minmax(200px,235px) minmax(0,1fr);gap:17px}
+.timeline-machine-picture{align-content:center;gap:3px;min-height:166px;padding:7px}
+.timeline-machine-picture:before{content:'STRUKTUR KONSEPTUAL';justify-self:start;color:#8fa394;font:7px 'DM Mono',monospace;letter-spacing:.1em}
+.machine-picture-svg{width:100%;max-height:150px;overflow:visible}
+.machine-callout circle{fill:#b2ed8b;stroke:#122018;stroke-width:1.5}
+.machine-callout text{fill:#102018;font:700 7px 'DM Mono',monospace;text-anchor:middle}
+.machine-parts{display:grid;gap:7px;margin-top:2px;padding:10px;border:1px solid #2e4435;border-radius:9px;background:#111a14}
+.machine-parts> b{color:#b8e99b;font:700 10px Manrope,Arial,sans-serif}
+.machine-parts-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.machine-part{display:flex;align-items:flex-start;gap:7px;min-width:0;padding:7px;border-radius:7px;background:#17231a}
+.machine-part>i{flex:0 0 18px;width:18px;height:18px;display:grid;place-items:center;border:1px solid #72b77a;border-radius:50%;color:#c5f3a4;font:8px 'DM Mono',monospace;font-style:normal}
+.machine-part>span{min-width:0;display:grid;gap:3px}
+.machine-part b{color:#d6e6d8;font-size:9px;line-height:1.3}
+.machine-part small{color:#91a196;font-size:8px;line-height:1.45}
+@media(max-width:700px){
+ .timeline-card{grid-template-columns:minmax(0,1fr);gap:10px}
+ .timeline-machine-picture{min-height:155px;max-height:none}
+ .machine-picture-svg{width:min(100%,260px);max-height:145px}
+ .machine-parts-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .machine-part{padding:6px}
+ .machine-part b{font-size:8px}
+ .machine-part small{font-size:7px}
+}
+/* Exploded component blueprint styling */
+.timeline-card{grid-template-columns:minmax(220px,250px) minmax(0,1fr);gap:17px}
+.timeline-machine-picture{min-height:188px;padding:7px}
+.machine-picture-svg{width:100%;height:auto;max-height:176px;overflow:visible}
+.blueprint-board{fill:#0d1713;stroke:#3b5544;stroke-width:1}
+.machine-picture-svg{background-image:linear-gradient(#9bc9a313 1px,transparent 1px),linear-gradient(90deg,#9bc9a313 1px,transparent 1px);background-size:10px 10px}
+.explode-guide{fill:none;stroke:#83c898;stroke-width:1;stroke-dasharray:3 3;opacity:.8}
+.exploded-part .part-line{fill:none;stroke:#b2d9bd;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+.exploded-part .part-fill{fill:#7bd0a1;stroke:#b8edc0;stroke-width:1}
+.machine-callout{fill:#b2ed8b;stroke:#122018;stroke-width:1.5}
+.machine-callout-text{fill:#102018;font:700 7px 'DM Mono',monospace;text-anchor:middle}
+.blueprint-stamp{fill:#718879;font:5.5px 'DM Mono',monospace;letter-spacing:.09em;text-anchor:middle}
+.machine-parts{gap:8px;padding:11px}
+.machine-parts> b{font-size:10px}
+.machine-parts-list{gap:6px}
+.machine-requirements{display:grid;gap:5px;padding:9px 11px;border-left:2px solid #d5bd76;border-radius:0 8px 8px 0;background:#211f16;color:#d5cda7;font-size:9px;line-height:1.6}
+.machine-requirements>b{color:#e8d68d;font-size:9px}
+.map-references{width:min(100%,900px);display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px auto 0;padding:12px;border:1px solid #2d4033;border-radius:10px;background:#111914}
+.map-references>b{flex-basis:100%;color:#a9e68a;font-size:10px;text-align:center}
+.map-references a{color:#9eddb5;font-size:9px;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:700px){
+ .timeline-card{grid-template-columns:minmax(0,1fr);gap:10px}
+ .timeline-machine-picture{min-height:174px}
+ .machine-picture-svg{width:min(100%,290px);max-height:168px}
+ .machine-requirements{font-size:9px}
+ .map-references{align-items:flex-start;justify-content:flex-start}
+ .map-references>b{text-align:left}
+ .map-references a{font-size:8px}
+}
+/* Arduino electrical blueprints replace the former machine renderings */
+.timeline-entry{color:inherit}
+.timeline-card{display:grid;grid-template-columns:minmax(0,1fr);gap:13px;align-items:stretch}
+.arduino-blueprint{display:grid;width:100%;min-width:0;gap:9px;padding:11px;border:1px solid #35503f;border-radius:12px;background:#101914}
+.arduino-blueprint:before{content:none}
+.bp-board-caption{color:#9fe28c;font:9px 'DM Mono',monospace;letter-spacing:.1em}
+.bp-scroll{display:block;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;border:1px solid #34483c;border-radius:9px;background:#0c1410;scrollbar-color:#53775c #121b15}
+.arduino-svg{display:block;width:100%;min-width:600px;max-width:800px;height:auto}
+.bp-canvas{fill:#101a14;stroke:#344a3a;stroke-width:1}
+.bp-grid-line{stroke:#8fb69a;stroke-opacity:.12;stroke-width:.5}
+.bp-heading{fill:#a3d58e;font:9px 'DM Mono',monospace;letter-spacing:.1em}
+.bp-module rect{fill:#17251c;stroke:#85ae8e;stroke-width:1.2}
+.bp-module circle{fill:#9be875;stroke:#d6ffc4;stroke-width:1}
+.bp-module-name{fill:#e2ede3;font:9px 'DM Sans',Arial,sans-serif}
+.bp-module-pin{fill:#a3c7ad;font:8px 'DM Mono',monospace}
+.bp-wire{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:5 3}
+.wire-level,.wire-flow,.wire-buttons{stroke:#a3e779}.wire-ph,.wire-ec,.wire-pressure{stroke:#59c7dc}.wire-display,.wire-temp{stroke:#ca9cff}.wire-hx711{stroke:#f3c76c}
+.bp-board>rect:first-child{fill:#183d2a;stroke:#80c991;stroke-width:2}
+.bp-board-title{fill:#d9f5d4;font:700 11px 'DM Sans',Arial,sans-serif}
+.bp-board-sub{fill:#9bcaa4;font:7px 'DM Mono',monospace;letter-spacing:.08em}
+.bp-mcu{fill:#0b1510;stroke:#b6cabe;stroke-width:1.2}
+.bp-mcu-label{fill:#e2ebdf;font:7px 'DM Mono',monospace}
+.bp-pin-label{fill:#a1c1a4;font:7px 'DM Mono',monospace;letter-spacing:.08em}
+.bp-pin{fill:#baf28d;stroke:#14251a;stroke-width:1}
+.bp-pin-name{fill:#f0f5e8;font:8px 'DM Mono',monospace}
+.bp-header{fill:none;stroke:#9cbaa3;stroke-width:2;stroke-dasharray:2 3}
+.bp-board-foot{fill:#91aa96;font:6px 'DM Mono',monospace}
+.bp-foot{fill:#718578;font:7px 'DM Sans',Arial,sans-serif}
+.bp-connections{display:flex;flex-wrap:wrap;align-items:center;gap:6px;color:#a9b9aa;font-size:9px}
+.bp-connections>b{flex-basis:100%;color:#c1e6ae;font-size:10px}
+.bp-connection{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid #2d4033;border-radius:6px;background:#151f18;color:#cbd8cc;font:8px 'DM Mono',monospace}
+.bp-connection>i{width:7px;height:7px;border-radius:50%;background:#86d69a}
+.bp-connection.power>i{background:#ec8278}.bp-connection.ground>i{background:#cbd5d0}.bp-connection.clock>i{background:#c39af2}.bp-connection.probe>i,.bp-connection.data>i{background:#57cce0}
+.bp-warning{padding:9px 10px;border-left:2px solid #d7bf76;border-radius:0 7px 7px 0;background:#211f16;color:#d8d0a8;font-size:9px;line-height:1.55}
+.bp-source{justify-self:start;color:#9de0b5;font-size:9px;text-decoration:underline;text-underline-offset:2px}
+.timeline-copy{gap:10px}
+.machine-parts{margin-top:2px}
+@media(max-width:700px){
+ .timeline-card{gap:10px}
+ .arduino-blueprint{padding:8px}
+ .bp-board-caption{font-size:8px}
+ .arduino-svg{min-width:600px}
+ .bp-connections{gap:5px}
+ .bp-warning{font-size:8px}
+ .bp-source{font-size:8px}
+}
+/* Tinkercad-inspired light electronics workbench (original CSS/SVG, not copied assets) */
+.arduino-blueprint{background:#edf2f1;border-color:#c5d1cf;color:#17342d;box-shadow:0 8px 24px #0b1c1720}
+.bp-board-caption{color:#166552}
+.bp-scroll{background:#f8fbfa;border-color:#bccbc8;scrollbar-color:#729a8d #e4ecea}
+.arduino-svg{min-width:700px;max-width:900px}
+.bp-canvas{fill:#f5f8f7;stroke:#c6d2cf;stroke-width:1}
+.bp-grid-line{stroke:#79948d;stroke-opacity:.18;stroke-width:.7}
+.bp-heading{fill:#315b50;font:9px 'DM Mono',monospace;letter-spacing:.1em}
+.bb-body{fill:#fbfcfc;stroke:#b9c5c2;stroke-width:1.4;filter:drop-shadow(0 3px 2px #17342d20)}
+.bb-rail{opacity:.7}.bb-red{fill:#e77f79}.bb-blue{fill:#7ca7d1}.bb-channel{fill:#e8eeec;stroke:#d5dfdc;stroke-width:1}
+.bb-hole{fill:#71837e;opacity:.7}.bb-mark{fill:#c45350;font:8px Arial}.bb-note{fill:#71827d;font:7px 'DM Mono',monospace;letter-spacing:.3em}
+.part-pcb{fill:#16825d;stroke:#07543f;stroke-width:1.4;filter:drop-shadow(0 2px 1px #17342d40)}
+.part-chip{fill:#202d2b;stroke:#b6c9c1;stroke-width:1}.part-detail{fill:none;stroke:#b0d1bf;stroke-width:1.3}.part-mount{fill:#d7e2de;stroke:#466459;stroke-width:1}.part-pin{fill:#d9aa54;stroke:#86682f;stroke-width:1}.part-label{fill:#f2fff5;font:6px 'DM Sans',Arial,sans-serif}
+.bp-ph .part-pcb,.bp-ec .part-pcb{fill:#2173a1;stroke:#154867}.bp-display .part-pcb,.bp-buttons .part-pcb{fill:#29373b;stroke:#101d20}.bp-pressure .part-pcb,.bp-flow .part-pcb{fill:#4d6570;stroke:#293f49}.bp-hx711 .part-pcb{fill:#16825d}
+.bp-wire{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.wire-level,.wire-flow,.wire-buttons{stroke:#d6433d}.wire-ph,.wire-ec,.wire-pressure{stroke:#2381c0}.wire-display,.wire-temp{stroke:#8055bc}.wire-hx711{stroke:#d59a24}
+.arduino-board{filter:drop-shadow(0 4px 3px #10251d30)}.uno-board{fill:#188459;stroke:#086043;stroke-width:2}.uno-title{fill:#f2fff5;font:700 12px 'DM Sans',Arial}.uno-sub{fill:#c4e8d4;font:7px 'DM Mono',monospace;letter-spacing:.12em}.uno-usb{fill:#bdc9c6;stroke:#687c76;stroke-width:1.4}.uno-usb-in{fill:#64746f}.uno-jack{fill:#202b2c;stroke:#b7cbc1;stroke-width:2}.uno-jack-in{fill:#66756f}.uno-mcu{fill:#202b2c;stroke:#c5d6ce;stroke-width:1.5}.uno-chiplabel{fill:#e9f2ee;font:6px 'DM Mono',monospace}.uno-reset{fill:#dd665b;stroke:#f2c3bd;stroke-width:1}.uno-tiny{fill:#d1ead9;font:5px 'DM Mono',monospace}.uno-port{fill:#0d533c;stroke:#9bc8ae;stroke-width:1}.uno-trace{fill:none;stroke:#85c9a1;stroke-width:1;opacity:.62}.uno-brand{fill:#dcf3e4;font:6px 'DM Mono',monospace;letter-spacing:.08em}.uno-header{fill:#13221d;stroke:#abbeb5;stroke-width:1}.uno-pin{fill:#e7b957;stroke:#fff0bd;stroke-width:1}.uno-pinlabel{fill:#f5fff7;font:7px 'DM Mono',monospace}
+.bp-connections{color:#38534a}.bp-connections>b{color:#17634f}.bp-connection{border-color:#c9d6d2;background:#f8fbfa;color:#31534a}.bp-warning{background:#f5f0de;color:#5c5133}.bp-source{color:#166c55}
+@media(max-width:700px){.arduino-svg{min-width:700px}.arduino-blueprint{background:#edf2f1}}
+/* Generic component interface board; remove Arduino-specific visual identity */
+.component-pcb{fill:#167d66;stroke:#075c4c;stroke-width:2}
+.component-board .uno-trace{stroke:#a2dfc8}
+.component-board .uno-header{fill:#173b35}
+/* Detailed low-voltage component workbench and visible jumper terminations */
+.arduino-svg{min-width:850px;max-width:1000px}
+.bp-heading{font-size:10px;font-weight:700}
+.jumper{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px #15251f55)}
+.jumper-signal{stroke:#e8b42f}.jumper-power{stroke:#d9443f}.jumper-ground{stroke:#252e31}.jumper-clock{stroke:#8b57bf}
+.wire-end{stroke:#f8fbfa;stroke-width:1.2}.wire-end.wire-signal{fill:#e8b42f}.wire-end.wire-power{fill:#d9443f}.wire-end.wire-ground{fill:#252e31}.wire-end.wire-clock{fill:#8b57bf}
+.part-pad{fill:#d7ae50;stroke:#fff0bd;stroke-width:1}.pad-label,.terminal-label{fill:#253c35;font:6px 'DM Mono',monospace}
+.terminal{fill:#d5dedb;stroke:#788b84;stroke-width:1}.terminal-power{fill:#f2d9d7}.terminal-ground{fill:#cbd2d0}.terminal-signal{fill:#f5eacb}.terminal-screw{fill:#74847f;stroke:#e7ecea;stroke-width:.8}
+.sensor-head{fill:#c6d5d1;stroke:#45675d;stroke-width:2}.sensor-lead{fill:none;stroke:#596e68;stroke-width:3;stroke-linecap:round}.sensor-caption{fill:#38584e;font:6px 'DM Mono',monospace;letter-spacing:.04em}
+.lcd-frame{fill:#243c37;stroke:#0f2823;stroke-width:2;filter:drop-shadow(0 2px 1px #17342d40)}.lcd-glass{fill:#a9d397;stroke:#d2ecc5;stroke-width:1}.lcd-text{fill:#284c37;font:5px 'DM Mono',monospace}.lcd-caption,.lcd-pin{fill:#38584e;font:5px 'DM Mono',monospace}.lcd-pad{fill:#d5aa4d;stroke:#fff0bd;stroke-width:.8}
+.resistor-demo path{stroke:#b87934;stroke-width:2}.resistor-demo rect{fill:#d8b875;stroke:#72572f;stroke-width:1}.resistor-band{fill:none;stroke:#8c5030;stroke-width:2}.resistor-label{fill:#64756e;font:5px 'DM Mono',monospace}.board-jack rect{fill:#124f42;stroke:#b2dccb;stroke-width:1}.board-jack text{fill:#ddf2e8;font:6px 'DM Mono',monospace}
+@media(max-width:700px){.arduino-svg{min-width:850px}}
+/* Populate each sensor board with mounted passives and clear I/O terminal blocks */
+.sensor-module .part-pcb{stroke-width:1.8}
+.sensor-module:after{content:none}
+.bp-part-resistor{fill:#d6bc83;stroke:#705b34;stroke-width:.8}
+.component-board .uno-mcu{filter:drop-shadow(0 1px 1px #081d18)}
+.terminal-label{font-size:5.5px}
+.bp-foot{font-size:6.5px}
+.part-trace{fill:none;stroke:#b7dac6;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+.part-resistor{fill:#d8ba79;stroke:#fff0be;stroke-width:.8}
