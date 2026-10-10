@@ -48,3 +48,5 @@
  .report-note{font-size:9px}
  .report-links a,.report-links span{font-size:9px}
 }
+.disclosure-icon{width:9px;height:9px;flex:0 0 9px;border-right:2px solid #a9e68a;border-bottom:2px solid #a9e68a;transform:rotate(45deg);font-size:0;line-height:0;transition:transform .2s}
+.explain-panel[open]>summary .disclosure-icon,.report-panel[open]>.report-summary .disclosure-icon{transform:rotate(225deg)}
