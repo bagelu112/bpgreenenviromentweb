@@ -373,6 +373,16 @@
 .biz-conclusion{margin-top:12px;padding:17px 19px;border:1px solid #52744f;border-left:4px solid #9be875;border-radius:11px;background:linear-gradient(110deg,#1a2b1d,#141d17);box-shadow:0 8px 24px #0002}
 .biz-conclusion>b{color:#b9ed9b;font:700 12px Manrope,Arial,sans-serif}
 .biz-conclusion>p{margin:7px 0 0;color:#c2d1c4;font-size:10px;line-height:1.8}
+.biz-product-example{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.45fr);gap:clamp(14px,2vw,24px);align-items:center;margin:30px 0;padding:clamp(14px,2.3vw,24px);border:1px solid #375345;border-radius:16px;background:radial-gradient(ellipse at 0 0,#25433170,transparent 45%),linear-gradient(135deg,#17241c,#111813);box-shadow:0 14px 38px #0002}
+.biz-product-copy h2{margin:9px 0;color:#edf7ed;font:750 clamp(19px,2.2vw,27px)/1.2 Manrope,Arial,sans-serif;letter-spacing:-.025em}
+.biz-product-copy>p{color:#b3c3b6;font-size:11px;line-height:1.75}
+.biz-product-copy .biz-product-disclaimer{margin:13px 0;padding:10px 12px;border-left:2px solid #c5aa62;border-radius:0 7px 7px 0;background:#292619;color:#d4c99d;font-size:10px}
+.biz-product-copy .page-action{display:inline-flex;margin-top:3px}
+.biz-product-figure{min-width:0;margin:0;padding:7px;border:1px solid #385545;border-radius:12px;background:#0c1410}
+.biz-product-figure img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:7px}
+.biz-product-figure figcaption{padding:9px 5px 3px;color:#91a598;font-size:9px;line-height:1.5}
+@media(max-width:850px){.biz-product-example{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}}
+@media(max-width:620px){.biz-product-example{grid-template-columns:1fr;margin:23px 0;padding:14px}.biz-product-copy h2{font-size:21px}.biz-product-figure img{aspect-ratio:16/10}}
 .biz-conclusion{margin-top:12px;padding:17px 19px;border:1px solid #52744f;border-left:4px solid #9be875;border-radius:11px;background:linear-gradient(110deg,#1a2b1d,#141d17);box-shadow:0 8px 24px #0002}
 .biz-conclusion>b{color:#b9ed9b;font:700 12px Manrope,Arial,sans-serif}
 .biz-conclusion>p{margin:7px 0 0;color:#c2d1c4;font-size:10px;line-height:1.8}

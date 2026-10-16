@@ -251,7 +251,7 @@
                       </div>
                     </div>
 
-                    <button type="button" class="unit-action-btn" id="btnRecheckAI3">
+                    <button type="button" class="unit-action-btn" id="btnRecheckAI3" disabled>
                       🧪 Uji Coolant (AI-3)
                     </button>
                   </section>
@@ -418,14 +418,15 @@
                   </div>
 
                   <div style="display:flex; flex-direction:column; gap:6px; width:100%; margin-top:8px;">
-                    <button type="button" class="unit-action-btn" id="btnScanResidueManual"
+                    <button type="button" class="unit-action-btn" id="btnScanResidueManual" disabled
                       style="border-color:#f59e0b; width:100%; justify-content:center;">
-                      🔬 Pindai AI-1 (Material Konstruksi)
+                      🔬 Pindai AI-1 (Komposisi Residu)
                     </button>
-                    <button type="button" class="unit-action-btn btn-ai-special" id="btnOpenAiResidueSolver"
+                    <button type="button" class="unit-action-btn btn-ai-special" id="btnOpenAiResidueSolver" disabled
                       style="width:100%; justify-content:center;">
-                      ✨ Solusi AI (Limbah Non-Paving)
+                      ✨ Bandingkan Opsi Residu (AI)
                     </button>
+                    <small class="residue-route-hint" id="residueRouteHint">Selesaikan pemisahan terlebih dahulu agar residu tersedia.</small>
                   </div>
                 </section>
 
@@ -563,48 +564,49 @@
 
         <!-- Product Choices for Jury -->
         <div class="product-options-grid" id="productOptionsGrid">
-          <div class="product-option-card selected" data-product="semen" id="cardOptSemen">
+          <button type="button" class="product-option-card selected" data-product="semen" id="cardOptSemen">
             <span class="icon">🏢</span>
             <strong id="optTitleSemen">Semen Hijau</strong>
             <small id="optDescSemen">Green Geopolymer Cement</small>
             <span class="opt-rec-badge" id="badgeOptSemen"
               style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
               AI REKOMENDASI</span>
-          </div>
-          <div class="product-option-card" data-product="bata" id="cardOptBata">
+            <span class="product-option-disabled-label" hidden>Tidak dipilih untuk alur ini</span>
+          </button>
+          <button type="button" class="product-option-card" data-product="bata" id="cardOptBata" disabled>
             <span class="icon">🧱</span>
             <strong id="optTitleBata">Batu Bata</strong>
             <small id="optDescBata">Interlocking Eco-Brick</small>
             <span class="opt-rec-badge" id="badgeOptBata"
               style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
               AI REKOMENDASI</span>
-          </div>
-          <div class="product-option-card" data-product="kerikil" id="cardOptKerikil">
+            <span class="product-option-disabled-label">Tidak dipilih untuk alur ini</span>
+          </button>
+          <button type="button" class="product-option-card" data-product="kerikil" id="cardOptKerikil" disabled>
             <span class="icon">🛣️</span>
             <strong id="optTitleKerikil">Kerikil / Paving</strong>
             <small id="optDescKerikil">Lightweight Aggregate</small>
             <span class="opt-rec-badge" id="badgeOptKerikil"
               style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
               AI REKOMENDASI</span>
-          </div>
+            <span class="product-option-disabled-label">Tidak dipilih untuk alur ini</span>
+          </button>
         </div>
 
-        <!-- SPECIAL AI ADVISOR CALLOUT FOR NON-STANDARD / HAZARDOUS WASTE -->
+        <!-- AI ADVISOR CALLOUT -->
         <div class="ai-special-advisor-callout">
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:20px;">💡</span>
             <div>
-              <strong style="color:#fbbf24; font-size:11px;">Limbah Tidak Pantas untuk Pavement Block atau
-                Semen?</strong>
+              <strong style="color:#fbbf24; font-size:11px;">Perlu mengevaluasi residu padat?</strong>
               <p style="color:#cbd5e1; font-size:10px; margin-top:2px;">
-                Jika limbah sangat beracun (gagal TCLP) atau memiliki matriks kimia yang merusak beton, konsultasikan
-                dengan AI untuk rekomendasi pengolahan alternatif terbaik (BAT).
+                AI akan menilai data yang tersedia, mempertimbangkan pemanfaatan dan pengolahan, serta menyatakan bila data belum cukup.
               </p>
             </div>
           </div>
           <button type="button" class="unit-action-btn btn-ai-special" id="btnOpenAiFromModalAI1"
             style="margin-top:6px; width:100%; justify-content:center;">
-            ✨ Buka Konsultan AI Solusi Limbah B3 ↗
+            ✨ Buka Konsultan AI Evaluasi Residu ↗
           </button>
         </div>
 
@@ -698,19 +700,20 @@
           <p id="ai3ExplanationText">
             <strong>Simulasi Keputusan untuk Juri:</strong><br>
             AI-3 mengevaluasi apakah air langsung memenuhi spesifikasi pendingin server AI atau membutuhkan penetralan
-            lanjutan di Tangki 4.
+            lanjutan di Tangki 4. Setelah evaluasi, hanya jalur yang sesuai hasil yang dapat dipilih.
           </p>
         </div>
 
         <div style="display:flex; gap:12px; margin-top:20px;">
-          <button type="button" class="modal-confirm-btn" id="btnAI3Pass" style="flex:1;">
+          <button type="button" class="modal-confirm-btn ai3-decision-btn" id="btnAI3Pass" style="flex:1;" disabled>
             ✓ Simulasi 1: Lolos Standar (Langsung ke Cool Down)
           </button>
-          <button type="button" class="modal-confirm-btn" id="btnAI3Fail"
-            style="flex:1; background:linear-gradient(135deg, #a855f7, #7e22ce); color:#fff;">
+          <button type="button" class="modal-confirm-btn ai3-decision-btn" id="btnAI3Fail"
+            style="flex:1; background:linear-gradient(135deg, #a855f7, #7e22ce); color:#fff;" disabled>
             ⚠️ Simulasi 2: Belum Layak (Lanjut ke Tangki 4 & AI-4)
           </button>
         </div>
+        <p class="decision-availability-note">Pilihan abu-abu tidak sesuai hasil AI-3 dan tidak dapat dipilih.</p>
       </div>
     </div>
 
@@ -767,9 +770,9 @@
           <div class="modal-header">
             <div>
               <span class="modal-badge badge-ai-gradient">
-                ✨ RECHEMON INDUSTRIAL HAZARDOUS WASTE AI ADVISOR
+                ✨ RECHEMON INDUSTRIAL MATERIAL EVALUATOR
               </span>
-              <h3 class="modal-title">Konsultan AI Cerdas: Solusi Karakteristik Limbah Non-Standar</h3>
+              <h3 class="modal-title">Konsultan AI: Evaluasi Material Residu</h3>
             </div>
             <button type="button" class="modal-close-btn" title="Tutup">✕</button>
           </div>
@@ -778,7 +781,7 @@
           <div class="ai-api-key-banner">
             <div class="key-status-row">
               <span class="key-label">🔑 <strong>API Key AI:</strong></span>
-              <span class="key-status-badge" id="geminiKeyStatusBadge">Status: Siap (Expert Engine / API)</span>
+              <span class="key-status-badge" id="geminiKeyStatusBadge">API belum dipasang · analisis AI belum tersedia</span>
             </div>
             <div class="key-input-row">
               <input type="password" id="inputGeminiApiKey" class="api-key-input" autocomplete="new-password"
@@ -795,15 +798,14 @@
               🟣 <code>gsk_...</code> → <strong>Groq GPT-OSS 20B · free plan</strong> — <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Buat key Groq</a><br>
               🔵 <code>sk-or-v1-...</code> → <strong>OpenRouter Free Model Router</strong> — <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Buat key OpenRouter</a><br>
               <em style="color:#94a3b8;">Aplikasi hanya menerima key dari tiga opsi gratis ini; key API berbayar tidak digunakan.</em><br>
-              <em style="color:#64748b;">Tanpa key: sistem tetap berjalan menggunakan Kalkulasi Dinamis Lokal RECHEMON.</em>
+              <em style="color:#64748b;">Tanpa key, simulasi proses tetap berjalan; analisis pada konsultan ini memerlukan API key dan tidak akan menampilkan jawaban buatan lokal sebagai hasil AI.</em>
             </div>
             <div class="key-hint">Satu key aktif pada satu waktu; menyimpan key baru akan menggantinya. Key disimpan di browser pada perangkat ini. Free tier memiliki batas kuota. Google menyatakan konten dari tier gratis dapat digunakan untuk meningkatkan produk mereka; hindari data operasional yang rahasia. <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Detail ketentuan Gemini</a>.</div>
           </div>
 
           <!-- WASTE PRESETS & PROMPT -->
           <div class="ai-input-section">
-            <label class="section-label">Pilih Karakteristik Limbah Non-Standar / Tidak Pantas Jadi Paving
-              Block:</label>
+            <label class="section-label">Masukkan karakteristik material atau limbah yang akan dievaluasi:</label>
             <div class="waste-preset-chips" id="wastePresetChips">
               <button type="button" class="preset-chip" data-preset="mercury_toxic">
                 ☣️ Sludge B3 Merkuri & Timbal Tinggi
@@ -815,25 +817,39 @@
                 🧪 Spent Acid Pekat & Garam Sulfat Korosif
               </button>
               <button type="button" class="preset-chip" data-preset="dioxin_flyash">
-                🌫️ Fly Ash Insinerator Toksisitas Tinggi
+                🌫️ Fly Ash Insinerator Medis
               </button>
               <button type="button" class="preset-chip" data-preset="custom">
                 ⚙️ Ketik Bebas / Karakteristik Sendiri
               </button>
             </div>
 
+            <div class="ai-evaluation-focus">
+              <label class="section-label" for="aiEvaluationFocus">Fokus evaluasi (opsional):</label>
+              <select id="aiEvaluationFocus" class="ai-focus-select">
+                <option value="balanced">Netral — bandingkan semua opsi</option>
+                <option value="material">Pemulihan material dan logam</option>
+                <option value="construction">Kelayakan bahan konstruksi</option>
+                <option value="energy">Pemulihan energi</option>
+                <option value="risk">Pengurangan bahaya dan risiko</option>
+                <option value="operations">Biaya, kebutuhan proses, dan kemudahan operasi</option>
+              </select>
+              <span class="key-hint">Fokus hanya mengatur prioritas perbandingan; AI tetap diminta menampilkan alternatif dan keterbatasannya.</span>
+            </div>
+
             <div class="custom-prompt-container">
               <textarea id="aiWastePromptInput" rows="3" class="ai-waste-textarea"
-                placeholder="Deskripsikan karakteristik limbah Anda di sini... (contoh: Mengandung merkuri 50 mg/L, arsenik tinggi, tidak stabil jika dicetak menjadi paving block)"></textarea>
+                placeholder="Tuliskan komposisi dan data yang diketahui. Hindari menyimpulkan kelayakan sebelum evaluasi."></textarea>
               <div class="waste-prompt-toolbar">
                 <span class="key-hint">Isian awal mengikuti profil limbah yang dipilih di simulator.</span>
                 <button type="button" class="api-key-btn btn-secondary" id="btnUseWasteProfilePrompt">↻ Gunakan profil utama</button>
               </div>
+              <div class="key-hint ai-data-search-note">AI akan menyarankan data atau uji yang paling menentukan. Saran ini bukan pencarian web langsung atau hasil laboratorium.</div>
             </div>
 
             <button type="button" id="btnRunAiWasteAnalysis" class="modal-confirm-btn btn-ai-gradient"
               style="margin-top:10px;">
-              ✨ Analisis Solusi Terbaik dengan AI
+              ✨ Evaluasi Material dengan AI
             </button>
           </div>
 
@@ -841,7 +857,7 @@
           <div class="ai-results-container" id="aiResultsContainer" style="display:none; margin-top:14px;">
             <div class="ai-results-loading" id="aiResultsLoading" style="display:none;">
               <div class="pulse-loader"></div>
-              <span>Menghubungi AI & Menganalisis Karakteristik Matriks Limbah...</span>
+              <span>Menghubungi model AI & mengevaluasi data material...</span>
             </div>
 
             <div class="ai-results-content" id="aiResultsContent">
