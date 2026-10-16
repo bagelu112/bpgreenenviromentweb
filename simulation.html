@@ -1,18 +1,23 @@
 <!doctype html>
 <html lang="id">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#070d0a">
-  <meta name="description" content="Simulator Flowchart Horizontal RECHEMON: Pengolahan Limbah Industri Adaptif Multi-Karakteristik dengan 4-AI Sensor dan Sistem Pendingin Data Center.">
+  <meta name="description"
+    content="Simulator Flowchart Horizontal RECHEMON: Pengolahan Limbah Industri Adaptif Multi-Karakteristik dengan 4-AI Sensor dan Sistem Pendingin Data Center.">
   <title>RECHEMON | Simulator Flowchart Horizontal 4-AI Adaptif</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="simulation.css">
 </head>
+
 <body>
   <div class="game-viewport">
-    
+
     <!-- TOP GAME HUD BAR -->
     <header class="game-hud-top">
       <div class="brand-section">
@@ -25,18 +30,22 @@
 
       <!-- Quick Branch Focus Switcher -->
       <nav class="branch-switcher" aria-label="Pemilih Cabang Alur">
-        <button type="button" class="branch-btn residue-btn" id="btnBranchResidue">
-          <span>🪨</span> Jalur 1: Residu (Atas)
-        </button>
         <button type="button" class="branch-btn water-btn" id="btnBranchWater">
-          <span>💧</span> Jalur 2: Air & Coolant (Bawah)
+          <span>💧</span> Jalur 1: Air & Coolant (Atas)
+        </button>
+        <button type="button" class="branch-btn residue-btn" id="btnBranchResidue">
+          <span>🪨</span> Jalur 2: Residu Padat (Bawah)
         </button>
       </nav>
 
       <!-- HUD Controls -->
       <div class="hud-actions">
+        <button type="button" class="hud-btn" id="btnHudApiKey"
+          title="Atur API Key Google Gemini untuk Solusi AI Limbah"
+          style="color:#fbbf24; border-color:rgba(251,191,36,0.4);">🔑 API Key AI</button>
         <button type="button" class="hud-btn" id="btnZoomOut" title="Perkecil Tampilan (Zoom Out)">🔍 -</button>
-        <span id="zoomDisplay" style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted); min-width:36px; text-align:center;">100%</span>
+        <span id="zoomDisplay"
+          style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted); min-width:36px; text-align:center;">100%</span>
         <button type="button" class="hud-btn" id="btnZoomIn" title="Perbesar Tampilan (Zoom In)">🔍 +</button>
         <button type="button" class="hud-btn" id="btnZoomReset" title="Reset Zoom">↺ 100%</button>
         <button type="button" class="hud-btn btn-accent" id="btnToggleSound">🔊 Suara: Nyala</button>
@@ -48,22 +57,22 @@
     <!-- SCROLLABLE & ZOOMABLE PANORAMIC CANVAS -->
     <main class="canvas-container" id="canvasContainer">
       <div class="panoramic-track" id="panoramicTrack">
-        
+
         <!-- FLOWCHART BOARD -->
         <div class="flowchart-board">
 
           <!-- COLUMN 1: INLET & CENTRIFUGAL SEPARATION -->
           <div class="flowchart-inlet-col">
-            
+
             <!-- STATION 1: RAW WASTE INPUT & ADAPTIVE SELECTOR -->
             <section class="plant-unit" id="unitRawTank" style="width:230px;">
               <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
               <div class="unit-header">
                 <span class="unit-tag">TAHAP 01</span>
-                <span class="unit-tag" style="background:rgba(239,68,68,0.2); color:#f87171;">MASUKAN B3</span>
+                <span class="unit-tag" style="background:rgba(239,68,68,0.2); color:#f87171;">IDENTIFIKASI LIMBAH</span>
               </div>
-              <h2 class="unit-title">Tangki Limbah B3</h2>
-              <p class="unit-desc">Pilih profil industri atau atur rasio & pH sesuai kehendak.</p>
+              <h2 class="unit-title">Tangki Masukan Limbah B3</h2>
+              <p class="unit-desc">Pilih profil industri. AI mendeteksi kandungan molekul kimia & konsentrasi logam berat.</p>
 
               <!-- ADAPTIVE WASTE PROFILE SELECTOR & TUNER -->
               <div class="waste-profile-selector">
@@ -83,7 +92,8 @@
                       <span>Rasio Padat / Cair:</span>
                       <span id="labelRatioValue" class="slider-badge">40% : 60%</span>
                     </div>
-                    <input type="range" id="rangeSolidRatio" min="15" max="75" step="5" value="40" class="sim-slider" title="Geser untuk mengatur rasio padat/cair">
+                    <input type="range" id="rangeSolidRatio" min="15" max="75" step="5" value="40" class="sim-slider"
+                      title="Geser untuk mengatur rasio padat/cair">
                     <div class="slider-sublabels">
                       <span>🪨 Residu: <b id="sublabelSolid">40%</b></span>
                       <span>💧 Filtrat: <b id="sublabelLiquid">60%</b></span>
@@ -95,7 +105,8 @@
                       <span>Tingkat Keasaman (pH):</span>
                       <span id="labelPhValue" class="slider-badge ph-badge-acid">pH 4.2</span>
                     </div>
-                    <input type="range" id="rangeWastePh" min="2.0" max="12.0" step="0.2" value="4.2" class="sim-slider" title="Geser untuk mengatur pH masukan">
+                    <input type="range" id="rangeWastePh" min="2.0" max="12.0" step="0.2" value="4.2" class="sim-slider"
+                      title="Geser untuk mengatur pH masukan">
                   </div>
                 </div>
 
@@ -127,18 +138,21 @@
               <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
               <div class="unit-header">
                 <span class="unit-tag">TAHAP 02</span>
-                <span class="unit-tag">PEMISAHAN</span>
+                <span class="unit-tag">MULTISTAGE FILTRASI</span>
               </div>
               <h2 class="unit-title">Separator Sentrifugal</h2>
-              <p class="unit-desc">Memisahkan rasio padatan & cairan sesuai jenis limbah.</p>
+              <p class="unit-desc">Penyaringan bertahap memisahkan kontaminan cair & padat sesuai rasio limbah.</p>
 
               <div class="tank-vessel" style="justify-content:center; align-items:center;">
                 <div class="centrifuge-disk" id="centrifugeDisk">
                   <div style="font-size:26px;">⚙️</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; width:100%; padding:0 8px; position:absolute; bottom:6px;">
-                  <span id="labelSludgeRatio" style="font-size:9px; color:#f59e0b; font-family:var(--font-mono);">↗ Residu (40%)</span>
-                  <span id="labelWaterRatio" style="font-size:9px; color:#00d2ff; font-family:var(--font-mono);">↘ Filtrat (60%)</span>
+                <div
+                  style="display:flex; justify-content:space-between; width:100%; padding:0 8px; position:absolute; bottom:6px;">
+                  <span id="labelWaterRatio" style="font-size:9px; color:#00d2ff; font-family:var(--font-mono);">↖
+                    Filtrat (60%)</span>
+                  <span id="labelSludgeRatio" style="font-size:9px; color:#f59e0b; font-family:var(--font-mono);">↙
+                    Residu (40%)</span>
                 </div>
               </div>
 
@@ -151,14 +165,14 @@
 
           <!-- FLOWCHART FORK JUNCTION (BRANCHING PIPES SVG) -->
           <div class="flowchart-fork-junction">
-            <svg class="fork-svg" viewBox="0 0 44 360">
-              <!-- Upper Pipe to Residue Row -->
-              <path class="fork-pipe" d="M 0 240 C 26 240, 18 70, 44 70" />
-              <path class="fork-flow pipe-sludge" id="pipeSludgeFlow" d="M 0 240 C 26 240, 18 70, 44 70" />
+            <svg class="fork-svg" viewBox="0 0 54 480">
+              <!-- Upper Pipe to Water & Coolant Row (Branch 1) -->
+              <path class="fork-pipe" d="M 0 320 C 30 320, 20 130, 54 130" />
+              <path class="fork-flow pipe-water" id="pipeWaterFlow" d="M 0 320 C 30 320, 20 130, 54 130" />
 
-              <!-- Lower Pipe to Water Row -->
-              <path class="fork-pipe" d="M 0 240 C 26 240, 18 290, 44 290" />
-              <path class="fork-flow pipe-water" id="pipeWaterFlow" d="M 0 240 C 26 240, 18 290, 44 290" />
+              <!-- Lower Pipe to Residue Row (Branch 2) -->
+              <path class="fork-pipe" d="M 0 320 C 30 320, 20 420, 54 420" />
+              <path class="fork-flow pipe-sludge" id="pipeSludgeFlow" d="M 0 320 C 30 320, 20 420, 54 420" />
             </svg>
           </div>
 
@@ -166,130 +180,40 @@
           <div class="flowchart-branches">
 
             <!-- =======================================================
-                 ROW 1 (TOP LINE): JALUR RESIDU PADAT (UPCYCLING)
-                 ======================================================= -->
-            <div class="flowchart-branch-row branch-row-residue">
-              <div class="branch-row-header">
-                <strong style="color:#fbbf24;">
-                  <span>🪨</span> JALUR 1: RESIDU PADAT (WASTE-TO-VALUE)
-                </strong>
-                <span class="badge" id="badgeResidueHeader">AI-1 Mineral Scanner & Pabrikasi Mekanikal</span>
-              </div>
-
-              <div class="branch-units-line">
-                
-                <!-- STATION 3: RESIDUE TANK + AI-1 -->
-                <section class="plant-unit ai-station-amber" id="unitResidueTank">
-                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
-                  <div class="unit-header">
-                    <span class="unit-tag" style="color:#f59e0b;">RESIDU</span>
-                    <div class="ai-badge badge-amber">
-                      <span>🤖</span> AI-1
-                    </div>
-                  </div>
-                  <h2 class="unit-title">Tangki Residu Padat</h2>
-                  <p class="unit-desc">Karakterisasi mineral ampas untuk rekomendasi produk.</p>
-
-                  <div class="tank-vessel">
-                    <div class="scanner-rig"></div>
-                    <div class="scanner-laser" id="laserAI1" style="background:linear-gradient(180deg, rgba(245,158,11,0.8), rgba(245,158,11,0.05));"></div>
-                    <div class="liquid-layer sludge" id="tankResidueLiquid">
-                      <div class="wave-top"></div>
-                    </div>
-                  </div>
-
-                  <button type="button" class="unit-action-btn" id="btnScanResidueManual" style="border-color:#f59e0b;">
-                    🔬 Pindai AI-1
-                  </button>
-                </section>
-
-                <!-- CONNECTOR ARROW -->
-                <div class="flow-arrow-connector" id="arrowResidueToMachine">→</div>
-
-                <!-- STATION 4: MECHANICAL MACHINE (NON-AI) -->
-                <section class="plant-unit" id="unitMechanicalMachine">
-                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
-                  <div class="unit-header">
-                    <span class="unit-tag">PABRIKASI</span>
-                    <span class="unit-tag" style="background:rgba(245,158,11,0.2); color:#fbbf24;">NON-AI</span>
-                  </div>
-                  <h2 class="unit-title">Reaktor Mekanikal</h2>
-                  <p class="unit-desc">Mixer, Press, Kiln: pengolahan fisik/termal murni.</p>
-
-                  <div class="tank-vessel" style="justify-content:center; align-items:center; background:#121a15;">
-                    <div class="mechanical-mixer">
-                      <div class="gear-icon" id="machineGear">⚙️</div>
-                      <span id="machineStatusText" style="font-size:9px; color:#cbd5e1; text-align:center; padding:2px;">Standby</span>
-                    </div>
-                  </div>
-
-                  <div style="font-size:10px; color:#94a3b8; margin-top:8px; text-align:center;">
-                    *Mesin Fisik Industri
-                  </div>
-                </section>
-
-                <!-- CONNECTOR ARROW -->
-                <div class="flow-arrow-connector" id="arrowMachineToProduct">→</div>
-
-                <!-- STATION 5: PRODUCT SHOWCASE -->
-                <section class="plant-unit" id="unitProductShowcase" style="border-color:#f59e0b; width:220px;">
-                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
-                  <div class="unit-header">
-                    <span class="unit-tag" style="background:rgba(245,158,11,0.2); color:#f59e0b;">OUTPUT 2</span>
-                    <span class="unit-tag" style="color:#00f59b;">MATERIAL</span>
-                  </div>
-                  <h2 class="unit-title">Produk Jadi Sirkular</h2>
-                  <p class="unit-desc">Material konstruksi ramah lingkungan bersertifikasi.</p>
-
-                  <div class="tank-vessel" style="background:#0a140f; padding:8px; justify-content:center;">
-                    <div id="productShowcaseContent" style="text-align:center;">
-                      <div style="font-size:24px; margin-bottom:4px;">🏢</div>
-                      <strong style="color:#fbbf24; font-size:11px; display:block;">Semen Ramah Lingkungan</strong>
-                      <span style="font-size:9px; color:#94a3b8; display:block; margin-top:2px;">Kuat Tekan 38.5 MPa</span>
-                      <span style="font-size:9px; color:#00f59b;">TCLP Non-Toxic Pass</span>
-                    </div>
-                  </div>
-
-                  <div style="font-size:10px; color:#00f59b; margin-top:8px; font-weight:700;">
-                    ✓ Zero Waste ke TPA
-                  </div>
-                </section>
-
-              </div>
-            </div>
-
-            <!-- =======================================================
-                 ROW 2 (BOTTOM LINE): JALUR PEMURNIAN AIR & COOLANT AI
+                 ROW 1 (TOP LINE): JALUR PEMURNIAN AIR & COOLANT DATA CENTER AI
                  ======================================================= -->
             <div class="flowchart-branch-row branch-row-water">
               <div class="branch-row-header">
                 <strong style="color:#38bdf8;">
-                  <span>💧</span> JALUR 2: PEMURNIAN AIR & COOLANT DATA CENTER AI
+                  <span>💧</span> JALUR 1: PEMURNIAN AIR & COOLANT DATA CENTER AI
                 </strong>
-                <span class="badge" id="badgeWaterHeader">AI-2 Dosing, AI-3 Inspector, AI-4 Certifier</span>
+                <span class="badge" id="badgeWaterHeader">Langkah 3-5: AI Dosing → Sterilisasi → Data Center Cooling Loop</span>
               </div>
 
-              <div class="branch-units-line">
+              <div class="branch-units-line water-units-line">
 
-                <!-- STATION 6: CHEMICAL REACTION TANK + AI-2 -->
+                <!-- STATION 3: CHEMICAL REACTION TANK + AI-2 -->
                 <section class="plant-unit ai-station-cyan" id="unitWaterTank">
                   <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
                   <div class="unit-header">
-                    <span class="unit-tag" style="color:#00d2ff;">REAKSI</span>
+                    <span class="unit-tag" style="color:#00d2ff;">TAHAP 03</span>
                     <div class="ai-badge badge-cyan">
-                      <span>🤖</span> AI-2
+                      <span>🤖</span> AI-2 ADAPTIVE DOSING
                     </div>
                   </div>
                   <h2 class="unit-title">Tangki Reaksi Kimia</h2>
-                  <p class="unit-desc">Klik air untuk formula reaktan adaptif.</p>
+                  <p class="unit-desc">AI memberikan dosis reaktan secara presisi otomatis. Klik air untuk formula AI-2.</p>
 
-                  <div class="tank-vessel clickable-tank" id="clickableWaterArea" title="👉 KLIK AIR DI SINI UNTUK UJI LAB & FORMULA AI-2">
-                    <div id="reagentInjector" style="position:absolute; top:6px; left:50%; transform:translateX(-50%); z-index:15; font-size:9px; color:#00d2ff; font-family:var(--font-mono); display:none;">
+                  <div class="tank-vessel clickable-tank" id="clickableWaterArea"
+                    title="👉 KLIK AIR DI SINI UNTUK UJI LAB & FORMULA AI-2">
+                    <div id="reagentInjector"
+                      style="position:absolute; top:6px; left:50%; transform:translateX(-50%); z-index:15; font-size:9px; color:#00d2ff; font-family:var(--font-mono); display:none;">
                       [INJEKSI...]
                     </div>
                     <div class="liquid-layer dirty-water" id="tankWaterLiquid">
                       <div class="wave-top"></div>
-                      <div style="position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); color:#ffffff; font-size:10px; font-weight:700; text-shadow:0 1px 4px rgba(0,0,0,0.8); pointer-events:none; text-align:center;">
+                      <div
+                        style="position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); color:#ffffff; font-size:10px; font-weight:700; text-shadow:0 1px 4px rgba(0,0,0,0.8); pointer-events:none; text-align:center;">
                         👆 KLIK AIR<br>UJI AI-2
                       </div>
                     </div>
@@ -300,79 +224,105 @@
                   </div>
                 </section>
 
-                <!-- CONNECTOR ARROW -->
-                <div class="flow-arrow-connector" id="arrowWaterToSteril">→</div>
+                <!-- CONNECTOR ARROW: WATER TO STERIL 1 -->
+                <div class="flow-arrow-connector" id="arrowWaterToSteril" title="Aliran ke Tahap Sterilisasi 1">→</div>
 
-                <!-- STATION 7: STERILIZATION TANK + AI-3 -->
-                <section class="plant-unit ai-station" id="unitSterilTank">
-                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
-                  <div class="unit-header">
-                    <span class="unit-tag">STERIL 1</span>
-                    <div class="ai-badge">
-                      <span>🤖</span> AI-3
+                <!-- STERILIZATION DUAL-TIER CLUSTER (STERIL 1 ATAS & STERIL 2 BAWAH DENGAN HUBUNGAN BERBALIK) -->
+                <div class="steril-substation-cluster">
+
+                  <!-- TAHAP STERIL 1 (ATAS: EVALUASI AI-3) -->
+                  <section class="plant-unit ai-station" id="unitSterilTank">
+                    <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
+                    <div class="unit-header">
+                      <span class="unit-tag">STERIL 1</span>
+                      <div class="ai-badge">
+                        <span>🤖</span> AI-3
+                      </div>
                     </div>
-                  </div>
-                  <h2 class="unit-title">Tangki Steril 1 (Coolant)</h2>
-                  <p class="unit-desc">Membran UF/RO & evaluasi baku mutu.</p>
+                    <h2 class="unit-title">Tangki Steril 1 (Coolant)</h2>
+                    <p class="unit-desc">Membran UF/RO & evaluasi baku mutu AI-3.</p>
 
-                  <div class="tank-vessel">
-                    <div class="scanner-rig"></div>
-                    <div class="scanner-laser" id="laserAI3"></div>
-                    <div class="liquid-layer pure-water" id="tankSterilLiquid">
-                      <div class="wave-top"></div>
+                    <div class="tank-vessel">
+                      <div class="scanner-rig"></div>
+                      <div class="scanner-laser" id="laserAI3"></div>
+                      <div class="liquid-layer pure-water" id="tankSterilLiquid">
+                        <div class="wave-top"></div>
+                      </div>
                     </div>
-                  </div>
 
-                  <button type="button" class="unit-action-btn" id="btnRecheckAI3">
-                    🧪 Uji Coolant (AI-3)
-                  </button>
-                </section>
+                    <button type="button" class="unit-action-btn" id="btnRecheckAI3">
+                      🧪 Uji Coolant (AI-3)
+                    </button>
+                  </section>
 
-                <!-- CONNECTOR ARROW -->
-                <div class="flow-arrow-connector" id="arrowSterilToPolish">→</div>
-
-                <!-- STATION 8: POLISHING TANK + AI-4 -->
-                <section class="plant-unit ai-station-purple" id="unitPolishTank">
-                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
-                  <div class="unit-header">
-                    <span class="unit-tag" style="color:#c084fc;">STERIL 2</span>
-                    <div class="ai-badge badge-purple">
-                      <span>🤖</span> AI-4
-                    </div>
-                  </div>
-                  <h2 class="unit-title">Penetral Tambahan</h2>
-                  <p class="unit-desc">Resin mixed-bed & AI-4 di akhir pipa.</p>
-
-                  <div class="tank-vessel">
-                    <div class="scanner-rig"></div>
-                    <div class="scanner-laser" id="laserAI4" style="background:linear-gradient(180deg, rgba(168,85,247,0.8), rgba(168,85,247,0.05));"></div>
-                    <div class="liquid-layer coolant" id="tankPolishLiquid">
-                      <div class="wave-top"></div>
-                    </div>
-                    <div id="polishStatusText" style="position:absolute; bottom:6px; left:6px; right:6px; font-size:9px; font-family:var(--font-mono); color:#cbd5e1; text-align:center; z-index:10;">
-                      Standby (Aktif jika dialihkan)
+                  <!-- CONNECTOR DOWNWARD: HUBUNGAN BERBALIK (PENGALIHAN KE STERIL 2 JIKA HASIL KURANG BAGUS) -->
+                  <div class="steril-reroute-conduit" id="conduitSterilReroute"
+                    title="Hubungan Berbalik: Disalurkan ke Steril 2 jika hasil sterilisasi pertama kurang bagus">
+                    <div class="reroute-pipe-line" id="pipeSteril1To2">
+                      <span class="down-arrow">↓</span>
+                      <span class="reroute-label">Jalur Pengalihan: Kualitas Kurang Bagus (Diverted ke Steril 2)</span>
+                      <span class="down-arrow">↓</span>
                     </div>
                   </div>
 
-                  <div style="font-size:10px; color:#c084fc; margin-top:8px; text-align:center;">
-                    *AI-4 di akhir steril 2
+                  <!-- TAHAP STERIL 2 (BAWAH: PENETRAL TAMBAHAN RESIN MIXED-BED & AI-4) -->
+                  <section class="plant-unit ai-station-purple" id="unitPolishTank">
+                    <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
+                    <div class="unit-header">
+                      <span class="unit-tag" style="color:#c084fc;">STERIL 2</span>
+                      <div class="ai-badge badge-purple">
+                        <span>🤖</span> AI-4
+                      </div>
+                    </div>
+                    <h2 class="unit-title">Tangki Steril 2 (Penetral)</h2>
+                    <p class="unit-desc">Resin mixed-bed & AI-4 di akhir pipa.</p>
+
+                    <div class="tank-vessel">
+                      <div class="scanner-rig"></div>
+                      <div class="scanner-laser" id="laserAI4"
+                        style="background:linear-gradient(180deg, rgba(168,85,247,0.8), rgba(168,85,247,0.05));"></div>
+                      <div class="liquid-layer coolant" id="tankPolishLiquid">
+                        <div class="wave-top"></div>
+                      </div>
+                      <div id="polishStatusText"
+                        style="position:absolute; bottom:6px; left:6px; right:6px; font-size:9px; font-family:var(--font-mono); color:#cbd5e1; text-align:center; z-index:10;">
+                        Standby (Aktif jika dialihkan)
+                      </div>
+                    </div>
+
+                    <div style="font-size:10px; color:#c084fc; margin-top:8px; text-align:center;">
+                      *AI-4 di akhir steril 2
+                    </div>
+                  </section>
+
+                </div>
+
+                <!-- DUAL ROUTING MANIFOLD TO SERVER AI COOLING RACK -->
+                <div class="server-routing-manifold">
+                  <div class="manifold-branch top-branch" id="arrowSteril1ToServer"
+                    title="Jalur Langsung dari Steril 1 (Jika Lolos Standar AI-3)">
+                    <span class="manifold-pipe-label">✓ Lolos AI-3</span>
+                    <span class="manifold-arrow">→</span>
                   </div>
-                </section>
+                  <div class="manifold-branch bottom-branch" id="arrowPolishToServer"
+                    title="Jalur dari Steril 2 (Setelah Sertifikasi AI-4 Selesai)">
+                    <span class="manifold-pipe-label">✓ Lolos AI-4</span>
+                    <span class="manifold-arrow">→</span>
+                  </div>
+                </div>
 
-                <!-- CONNECTOR ARROW -->
-                <div class="flow-arrow-connector" id="arrowPolishToServer">→</div>
-
-                <!-- STATION 9: DATA CENTER AI SERVER COOLING -->
-                <section class="plant-unit" id="unitServerCoolant" style="border-color:#38bdf8; width:220px;">
+                <!-- STATION 6: DATA CENTER AI SERVER COOLING RACK -->
+                <section class="plant-unit plant-unit-server" id="unitServerCoolant"
+                  style="border-color:#38bdf8; width:235px;">
                   <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
                   <div class="unit-header">
                     <span class="unit-tag" style="background:rgba(56,189,248,0.2); color:#38bdf8;">OUTPUT 1</span>
                     <span class="unit-tag" style="color:#00f59b;">AI SERVER</span>
                   </div>
                   <h2 class="unit-title">Server AI Cooling Rack</h2>
-                  <p class="unit-desc">Air murni bersirkulasi mendinginkan GPU AI.</p>
+                  <p class="unit-desc">Air ultra-murni bersirkulasi mendinginkan GPU AI.</p>
 
-                  <div class="server-rack">
+                  <div class="server-rack-tower">
                     <div class="coolant-channel">
                       <div class="coolant-fill" id="serverCoolantFill"></div>
                     </div>
@@ -382,7 +332,8 @@
                         <span class="blade-led"></span>
                         <span class="blade-led blue"></span>
                       </div>
-                      <span style="font-size:9px; font-family:var(--font-mono); color:#94a3b8;">GPU BLADE #01</span>
+                      <span style="font-size:9px; font-family:var(--font-mono); color:#94a3b8;">GPU BLADE #01 (Top
+                        Inlet)</span>
                     </div>
                     <div class="server-blade">
                       <div class="blade-leds">
@@ -391,22 +342,144 @@
                       </div>
                       <span style="font-size:9px; font-family:var(--font-mono); color:#94a3b8;">GPU BLADE #02</span>
                     </div>
+                    <div class="server-blade">
+                      <div class="blade-leds">
+                        <span class="blade-led"></span>
+                        <span class="blade-led blue"></span>
+                      </div>
+                      <span style="font-size:9px; font-family:var(--font-mono); color:#94a3b8;">GPU BLADE #03</span>
+                    </div>
+                    <div class="server-blade">
+                      <div class="blade-leds">
+                        <span class="blade-led blue"></span>
+                        <span class="blade-led"></span>
+                      </div>
+                      <span style="font-size:9px; font-family:var(--font-mono); color:#94a3b8;">GPU BLADE #04 (Bottom
+                        Inlet)</span>
+                    </div>
 
                     <!-- Telemetry -->
-                    <div style="background:rgba(0,0,0,0.6); padding:4px 6px; border-radius:4px; border:1px solid #1e3a2b; margin-top:auto;">
-                      <div style="display:flex; justify-content:space-between;">
+                    <div
+                      style="background:rgba(0,0,0,0.6); padding:6px 8px; border-radius:6px; border:1px solid #1e3a2b; margin-top:auto;">
+                      <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
                         <span style="font-size:9px; color:#94a3b8;">Suhu GPU:</span>
-                        <span id="serverTempDisplay" style="font-size:10px; font-weight:700; color:#e2e8f0;">82.5 °C</span>
+                        <span id="serverTempDisplay" style="font-size:10px; font-weight:700; color:#e2e8f0;">82.5
+                          °C</span>
                       </div>
                       <div style="display:flex; justify-content:space-between;">
-                        <span style="font-size:9px; color:#94a3b8;">PUE:</span>
-                        <span id="serverPueDisplay" style="font-size:10px; font-weight:700; color:#38bdf8;">1.12 Target</span>
+                        <span style="font-size:9px; color:#94a3b8;">PUE Target:</span>
+                        <span id="serverPueDisplay" style="font-size:10px; font-weight:700; color:#38bdf8;">1.12
+                          Target</span>
                       </div>
                     </div>
                   </div>
 
                   <div style="font-size:10px; color:#38bdf8; margin-top:8px; text-align:center;">
                     ✓ 100% Bebas Kerak & Korosi
+                  </div>
+                </section>
+
+              </div>
+            </div>
+
+            <!-- =======================================================
+                 ROW 2 (BOTTOM LINE): JALUR RESIDU PADAT (UPCYCLING)
+                 ======================================================= -->
+            <div class="flowchart-branch-row branch-row-residue">
+              <div class="branch-row-header">
+                <strong style="color:#fbbf24;">
+                  <span>🪨</span> JALUR 2: UPCYCLING RESIDU PADAT (PILIHAN HASIL RESIDU SIRKULAR)
+                </strong>
+                <span class="badge" id="badgeResidueHeader">Langkah 6-7: AI-1 Deteksi Mineral → Mesin Reaktor → Produk Bernilai Tambah</span>
+              </div>
+
+              <div class="branch-units-line">
+
+                <!-- STATION 7: RESIDUE TANK + AI-1 + AI WASTE ADVISOR -->
+                <section class="plant-unit ai-station-amber" id="unitResidueTank" style="width:235px;">
+                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
+                  <div class="unit-header">
+                    <span class="unit-tag" style="color:#f59e0b;">TAHAP 06</span>
+                    <div class="ai-badge badge-amber">
+                      <span>🤖</span> AI-1 DETEKSI MINERAL
+                    </div>
+                  </div>
+                  <h2 class="unit-title">Tangki Residu Padat</h2>
+                  <p class="unit-desc">AI-1 mengidentifikasi komposisi mineral & logam untuk upcycling sirkular bernilai tambah.</p>
+
+                  <div class="tank-vessel">
+                    <div class="scanner-rig"></div>
+                    <div class="scanner-laser" id="laserAI1"
+                      style="background:linear-gradient(180deg, rgba(245,158,11,0.8), rgba(245,158,11,0.05));"></div>
+                    <div class="liquid-layer sludge" id="tankResidueLiquid">
+                      <div class="wave-top"></div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; flex-direction:column; gap:6px; width:100%; margin-top:8px;">
+                    <button type="button" class="unit-action-btn" id="btnScanResidueManual"
+                      style="border-color:#f59e0b; width:100%; justify-content:center;">
+                      🔬 Pindai AI-1 (Material Konstruksi)
+                    </button>
+                    <button type="button" class="unit-action-btn btn-ai-special" id="btnOpenAiResidueSolver"
+                      style="width:100%; justify-content:center;">
+                      ✨ Solusi AI (Limbah Non-Paving)
+                    </button>
+                  </div>
+                </section>
+
+                <!-- CONNECTOR ARROW -->
+                <div class="flow-arrow-connector" id="arrowResidueToMachine">→</div>
+
+                <!-- STATION 8: MECHANICAL MACHINE -->
+                <section class="plant-unit" id="unitMechanicalMachine" style="width:220px;">
+                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
+                  <div class="unit-header">
+                    <span class="unit-tag">PABRIKASI</span>
+                    <span class="unit-tag" style="background:rgba(245,158,11,0.2); color:#fbbf24;">REAKTOR</span>
+                  </div>
+                  <h2 class="unit-title">Reaktor Mekanikal / BAT</h2>
+                  <p class="unit-desc">Mixer, Press, Kiln, atau teknologi khusus AI.</p>
+
+                  <div class="tank-vessel" style="justify-content:center; align-items:center; background:#121a15;">
+                    <div class="mechanical-mixer">
+                      <div class="gear-icon" id="machineGear">⚙️</div>
+                      <span id="machineStatusText"
+                        style="font-size:9px; color:#cbd5e1; text-align:center; padding:2px;">Standby</span>
+                    </div>
+                  </div>
+
+                  <div id="machineSubtitleText"
+                    style="font-size:10px; color:#94a3b8; margin-top:8px; text-align:center;">
+                    *Mesin Fisik Industri / Reaktor Adaptif
+                  </div>
+                </section>
+
+                <!-- CONNECTOR ARROW -->
+                <div class="flow-arrow-connector" id="arrowMachineToProduct">→</div>
+
+                <!-- STATION 9: PRODUCT SHOWCASE -->
+                <section class="plant-unit" id="unitProductShowcase" style="border-color:#f59e0b; width:240px;">
+                  <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
+                  <div class="unit-header">
+                    <span class="unit-tag" style="background:rgba(245,158,11,0.2); color:#f59e0b;">OUTPUT 2</span>
+                    <span class="unit-tag" style="color:#00f59b;">SIRKULAR</span>
+                  </div>
+                  <h2 class="unit-title">Produk Jadi Sirkular</h2>
+                  <p class="unit-desc">Material atau produk bernilai ekonomi hasil olahan.</p>
+
+                  <div class="tank-vessel" style="background:#0a140f; padding:8px; justify-content:center;">
+                    <div id="productShowcaseContent" style="text-align:center;">
+                      <div style="font-size:24px; margin-bottom:4px;">🏢</div>
+                      <strong style="color:#fbbf24; font-size:11px; display:block;">Semen Ramah Lingkungan</strong>
+                      <span style="font-size:9px; color:#94a3b8; display:block; margin-top:2px;">Kuat Tekan 38.5
+                        MPa</span>
+                      <span style="font-size:9px; color:#00f59b;">TCLP Non-Toxic Pass</span>
+                    </div>
+                  </div>
+
+                  <div id="productFooterBadge" style="font-size:10px; color:#00f59b; margin-top:8px; font-weight:700;">
+                    ✓ Zero Waste ke TPA
                   </div>
                 </section>
 
@@ -433,12 +506,13 @@
       <nav class="minimap-bar" aria-label="Mini-Map Stasiun Pabrik">
         <button type="button" class="minimap-station current-pos" data-target="unitRawTank">1. Masukan B3</button>
         <button type="button" class="minimap-station" data-target="unitCentrifuge">2. Separator</button>
-        <button type="button" class="minimap-station has-ai" data-target="unitResidueTank">3. Residu (AI-1)</button>
-        <button type="button" class="minimap-station" data-target="unitMechanicalMachine">4. Mesin Pabrik</button>
-        <button type="button" class="minimap-station has-ai" data-target="unitWaterTank">5. Reaksi Kimia (AI-2)</button>
-        <button type="button" class="minimap-station has-ai" data-target="unitSterilTank">6. Steril 1 (AI-3)</button>
-        <button type="button" class="minimap-station has-ai" data-target="unitPolishTank">7. Penetral 2 (AI-4)</button>
-        <button type="button" class="minimap-station" data-target="unitServerCoolant">8. Server Coolant</button>
+        <button type="button" class="minimap-station has-ai" data-target="unitWaterTank">3. Reaksi Kimia (AI-2)</button>
+        <button type="button" class="minimap-station has-ai" data-target="unitSterilTank">4. Steril 1 (AI-3)</button>
+        <button type="button" class="minimap-station has-ai" data-target="unitPolishTank">5. Steril 2 (AI-4)</button>
+        <button type="button" class="minimap-station" data-target="unitServerCoolant">6. Server Coolant</button>
+        <button type="button" class="minimap-station has-ai" data-target="unitResidueTank">7. Residu (AI-1)</button>
+        <button type="button" class="minimap-station" data-target="unitMechanicalMachine">8. Mesin Pabrik</button>
+        <button type="button" class="minimap-station" data-target="unitProductShowcase">9. Produk Sirkular</button>
       </nav>
     </footer>
 
@@ -451,7 +525,8 @@
       <div class="holo-modal-card">
         <div class="modal-header">
           <div>
-            <span class="modal-badge" style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4);">
+            <span class="modal-badge"
+              style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4);">
               🤖 AI-1 SENSOR ANALYZER
             </span>
             <h3 class="modal-title" id="ai1ModalTitle">Karakterisasi Residu Padat & Rekomendasi AI</h3>
@@ -481,7 +556,8 @@
         <div class="ai-recommendation-box" style="border-color:#f59e0b; background:rgba(245,158,11,0.08);">
           <p id="ai1RecommendationText">
             <strong>Hasil Rekomendasi Algoritma AI-1:</strong><br>
-            Residu padat kaya akan prekursor geopolimer dan silika aktif. Sangat cocok dikonversi menjadi material konstruksi komersial. Silakan pilih produk tujuan untuk dikirim ke mesin pengolahan:
+            Residu padat kaya akan prekursor geopolimer dan silika aktif. Sangat cocok dikonversi menjadi material
+            konstruksi komersial. Silakan pilih produk tujuan untuk dikirim ke mesin pengolahan:
           </p>
         </div>
 
@@ -491,23 +567,49 @@
             <span class="icon">🏢</span>
             <strong id="optTitleSemen">Semen Hijau</strong>
             <small id="optDescSemen">Green Geopolymer Cement</small>
-            <span class="opt-rec-badge" id="badgeOptSemen" style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★ AI REKOMENDASI</span>
+            <span class="opt-rec-badge" id="badgeOptSemen"
+              style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
+              AI REKOMENDASI</span>
           </div>
           <div class="product-option-card" data-product="bata" id="cardOptBata">
             <span class="icon">🧱</span>
             <strong id="optTitleBata">Batu Bata</strong>
             <small id="optDescBata">Interlocking Eco-Brick</small>
-            <span class="opt-rec-badge" id="badgeOptBata" style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★ AI REKOMENDASI</span>
+            <span class="opt-rec-badge" id="badgeOptBata"
+              style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
+              AI REKOMENDASI</span>
           </div>
           <div class="product-option-card" data-product="kerikil" id="cardOptKerikil">
             <span class="icon">🛣️</span>
             <strong id="optTitleKerikil">Kerikil / Paving</strong>
             <small id="optDescKerikil">Lightweight Aggregate</small>
-            <span class="opt-rec-badge" id="badgeOptKerikil" style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★ AI REKOMENDASI</span>
+            <span class="opt-rec-badge" id="badgeOptKerikil"
+              style="display:none; font-size:8px; color:#fbbf24; background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:1px 4px; margin-top:3px;">★
+              AI REKOMENDASI</span>
           </div>
         </div>
 
-        <button type="button" class="modal-confirm-btn" id="btnConfirmResidueAI" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff;">
+        <!-- SPECIAL AI ADVISOR CALLOUT FOR NON-STANDARD / HAZARDOUS WASTE -->
+        <div class="ai-special-advisor-callout">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:20px;">💡</span>
+            <div>
+              <strong style="color:#fbbf24; font-size:11px;">Limbah Tidak Pantas untuk Pavement Block atau
+                Semen?</strong>
+              <p style="color:#cbd5e1; font-size:10px; margin-top:2px;">
+                Jika limbah sangat beracun (gagal TCLP) atau memiliki matriks kimia yang merusak beton, konsultasikan
+                dengan AI untuk rekomendasi pengolahan alternatif terbaik (BAT).
+              </p>
+            </div>
+          </div>
+          <button type="button" class="unit-action-btn btn-ai-special" id="btnOpenAiFromModalAI1"
+            style="margin-top:6px; width:100%; justify-content:center;">
+            ✨ Buka Konsultan AI Solusi Limbah B3 ↗
+          </button>
+        </div>
+
+        <button type="button" class="modal-confirm-btn" id="btnConfirmResidueAI"
+          style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; margin-top:8px;">
           ⚙️ Kirim ke Mesin Pengolahan Mekanikal →
         </button>
       </div>
@@ -518,7 +620,8 @@
       <div class="holo-modal-card">
         <div class="modal-header">
           <div>
-            <span class="modal-badge" style="background:rgba(0,210,255,0.2); color:#00d2ff; border:1px solid rgba(0,210,255,0.4);">
+            <span class="modal-badge"
+              style="background:rgba(0,210,255,0.2); color:#00d2ff; border:1px solid rgba(0,210,255,0.4);">
               🤖 AI-2 CHEMICAL DOSING ESTIMATOR
             </span>
             <h3 class="modal-title" id="ai2ModalTitle">Uji Laboratorium & Resep Reaktan AI-2</h3>
@@ -551,7 +654,8 @@
           </div>
         </div>
 
-        <button type="button" class="modal-confirm-btn" id="btnApplyChemicalDosing" style="background:linear-gradient(135deg, #00d2ff, #0284c7); color:#031520;">
+        <button type="button" class="modal-confirm-btn" id="btnApplyChemicalDosing"
+          style="background:linear-gradient(135deg, #00d2ff, #0284c7); color:#031520;">
           🧪 OK — Terapkan Dosis Kimia Otomatis →
         </button>
       </div>
@@ -562,7 +666,8 @@
       <div class="holo-modal-card">
         <div class="modal-header">
           <div>
-            <span class="modal-badge" style="background:rgba(0,245,155,0.2); color:#00f59b; border:1px solid rgba(0,245,155,0.4);">
+            <span class="modal-badge"
+              style="background:rgba(0,245,155,0.2); color:#00f59b; border:1px solid rgba(0,245,155,0.4);">
               🤖 AI-3 COOLANT QUALITY INSPECTOR
             </span>
             <h3 class="modal-title">Pemeriksaan Spesifikasi Air Pendingin Server</h3>
@@ -592,7 +697,8 @@
         <div class="ai-recommendation-box">
           <p id="ai3ExplanationText">
             <strong>Simulasi Keputusan untuk Juri:</strong><br>
-            AI-3 mengevaluasi apakah air langsung memenuhi spesifikasi pendingin server AI atau membutuhkan penetralan lanjutan di Tangki 4.
+            AI-3 mengevaluasi apakah air langsung memenuhi spesifikasi pendingin server AI atau membutuhkan penetralan
+            lanjutan di Tangki 4.
           </p>
         </div>
 
@@ -600,7 +706,8 @@
           <button type="button" class="modal-confirm-btn" id="btnAI3Pass" style="flex:1;">
             ✓ Simulasi 1: Lolos Standar (Langsung ke Cool Down)
           </button>
-          <button type="button" class="modal-confirm-btn" id="btnAI3Fail" style="flex:1; background:linear-gradient(135deg, #a855f7, #7e22ce); color:#fff;">
+          <button type="button" class="modal-confirm-btn" id="btnAI3Fail"
+            style="flex:1; background:linear-gradient(135deg, #a855f7, #7e22ce); color:#fff;">
             ⚠️ Simulasi 2: Belum Layak (Lanjut ke Tangki 4 & AI-4)
           </button>
         </div>
@@ -612,7 +719,8 @@
       <div class="holo-modal-card">
         <div class="modal-header">
           <div>
-            <span class="modal-badge" style="background:rgba(168,85,247,0.2); color:#c084fc; border:1px solid rgba(168,85,247,0.4);">
+            <span class="modal-badge"
+              style="background:rgba(168,85,247,0.2); color:#c084fc; border:1px solid rgba(168,85,247,0.4);">
               🤖 AI-4 FINAL COOLANT CERTIFIER
             </span>
             <h3 class="modal-title">Sertifikasi Akhir Tahap Steril 2</h3>
@@ -642,18 +750,125 @@
         <div class="ai-recommendation-box" style="border-color:#c084fc; background:rgba(168,85,247,0.08);">
           <p style="color:#f3e8ff;">
             <strong>Verifikasi AI-4 (Ditempatkan di Akhir Tangki 4):</strong><br>
-            Air telah melalui deionisasi penuh dan dipastikan 100% aman untuk loop pendingin prosesor GPU AI berkecepatan tinggi tanpa resiko hambatan termal atau korsleting.
+            Air telah melalui deionisasi penuh dan dipastikan 100% aman untuk loop pendingin prosesor GPU AI
+            berkecepatan tinggi tanpa resiko hambatan termal atau korsleting.
           </p>
         </div>
 
-        <button type="button" class="modal-confirm-btn" id="btnConfirmAI4" style="background:linear-gradient(135deg, #00f59b, #00c97d); color:#051a0f;">
+        <button type="button" class="modal-confirm-btn" id="btnConfirmAI4"
+          style="background:linear-gradient(135deg, #00f59b, #00c97d); color:#051a0f;">
           🚀 Alirkan Air Murni ke Server AI Cool Down →
         </button>
       </div>
+      <!-- MODAL 5: RECHEMON AI SOLID WASTE ADVISOR (POWERED BY GEMINI) -->
+      <div class="holo-modal-overlay" id="modalResidueAiSolver">
+        <div class="holo-modal-card ai-solver-modal-card">
+          <div class="modal-header">
+            <div>
+              <span class="modal-badge badge-ai-gradient">
+                ✨ RECHEMON INDUSTRIAL HAZARDOUS WASTE AI ADVISOR
+              </span>
+              <h3 class="modal-title">Konsultan AI Cerdas: Solusi Karakteristik Limbah Non-Standar</h3>
+            </div>
+            <button type="button" class="modal-close-btn" title="Tutup">✕</button>
+          </div>
+
+          <!-- API KEY SETTING BANNER -->
+          <div class="ai-api-key-banner">
+            <div class="key-status-row">
+              <span class="key-label">🔑 <strong>Google Gemini API Key:</strong></span>
+              <span class="key-status-badge" id="geminiKeyStatusBadge">Status: Siap (Expert Engine / API)</span>
+            </div>
+            <div class="key-input-row">
+              <input type="password" id="inputGeminiApiKey" class="api-key-input"
+                placeholder="Masukkan Gemini API Key (AIzaSy...) atau edit di file simulation.js">
+              <button type="button" class="api-key-btn" id="btnSaveApiKey">Simpan Key</button>
+              <button type="button" class="api-key-btn btn-secondary" id="btnClearApiKey">Hapus</button>
+            </div>
+            <div class="key-hint">
+              <strong style="color:#fbbf24;">Format API Key yang Didukung:</strong><br>
+              🟢 <code>AIzaSy...</code> → <strong>Google Gemini 2.0 Flash</strong> — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#38bdf8;">aistudio.google.com</a><br>
+              🟡 <code>sk-...</code> → <strong>OpenAI GPT-4o-mini</strong> — <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#38bdf8;">platform.openai.com</a><br>
+              🔵 <code>sk-ant-...</code> → <strong>Anthropic Claude 3 Haiku</strong> — <a href="https://console.anthropic.com/keys" target="_blank" style="color:#38bdf8;">console.anthropic.com</a><br>
+              <em style="color:#64748b;">Tanpa key: sistem tetap berjalan menggunakan Kalkulasi Dinamis Lokal RECHEMON.</em>
+            </div>
+          </div>
+
+          <!-- WASTE PRESETS & PROMPT -->
+          <div class="ai-input-section">
+            <label class="section-label">Pilih Karakteristik Limbah Non-Standar / Tidak Pantas Jadi Paving
+              Block:</label>
+            <div class="waste-preset-chips" id="wastePresetChips">
+              <button type="button" class="preset-chip active" data-preset="mercury_toxic">
+                ☣️ Sludge B3 Merkuri & Timbal Tinggi
+              </button>
+              <button type="button" class="preset-chip" data-preset="petro_tar">
+                🛢️ Tar Hidrokarbon & Residu Organik Sulfur
+              </button>
+              <button type="button" class="preset-chip" data-preset="corrosive_salts">
+                🧪 Spent Acid Pekat & Garam Sulfat Korosif
+              </button>
+              <button type="button" class="preset-chip" data-preset="dioxin_flyash">
+                🌫️ Fly Ash Insinerator Toksisitas Tinggi
+              </button>
+              <button type="button" class="preset-chip" data-preset="custom">
+                ⚙️ Ketik Bebas / Karakteristik Sendiri
+              </button>
+            </div>
+
+            <div class="custom-prompt-container">
+              <textarea id="aiWastePromptInput" rows="3" class="ai-waste-textarea"
+                placeholder="Deskripsikan karakteristik limbah Anda di sini... (contoh: Mengandung merkuri 50 mg/L, arsenik tinggi, tidak stabil jika dicetak menjadi paving block)"></textarea>
+            </div>
+
+            <button type="button" id="btnRunAiWasteAnalysis" class="modal-confirm-btn btn-ai-gradient"
+              style="margin-top:10px;">
+              ✨ Analisis Solusi Terbaik dengan AI
+            </button>
+          </div>
+
+          <!-- AI RESULTS CONTAINER -->
+          <div class="ai-results-container" id="aiResultsContainer" style="display:none; margin-top:14px;">
+            <div class="ai-results-loading" id="aiResultsLoading" style="display:none;">
+              <div class="pulse-loader"></div>
+              <span>Menghubungi AI & Menganalisis Karakteristik Matriks Limbah...</span>
+            </div>
+
+            <div class="ai-results-content" id="aiResultsContent">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
-  </div>
+    <!-- ═══ AI THINKING WINDOW (Floating Notification) ═══ -->
+    <div id="aiThinkingWindow" class="ai-thinking-window" role="status" aria-live="polite">
+      <div class="ai-thinking-inner">
+        <div class="ai-thinking-icon-wrap">
+          <div class="ai-thinking-icon">🧠</div>
+          <div class="ai-thinking-pulse"></div>
+        </div>
+        <div class="ai-thinking-body">
+          <div class="ai-thinking-header-row">
+            <span class="ai-thinking-title">AI SEDANG KALKULASI</span>
+            <span class="ai-thinking-provider-badge" id="aiThinkingProvider">⚡ Gemini 2.0 Flash</span>
+          </div>
+          <div class="ai-thinking-msg" id="aiThinkingMsg">Menghitung solusi terbaik...</div>
+          <div class="ai-thinking-dots">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <button type="button" class="ai-thinking-close" id="btnAiThinkingClose" title="Sembunyikan">✕</button>
+      </div>
+      <div class="ai-thinking-progress-bar">
+        <div class="ai-thinking-progress-fill"></div>
+      </div>
+    </div>
 
-  <script src="simulation.js"></script>
+    <script src="simulation.js"></script>
 </body>
+
 </html>
