@@ -20,13 +20,12 @@
   // =========================================================================
   // 🔑 KONFIGURASI API KEY GOOGLE GEMINI (AI PENGOLAHAN LIMBAH B3)
   // =========================================================================
-  // TARUH API KEY GEMINI ANDA DI BAWAH INI (di dalam tanda kutip ""):
-  const GEMINI_API_KEY = "sk-exEamhG0ZNXUgxsl7IIdnMzJAnT3JC6lv891m2ykxC6GDdpk"; // <-- Taruh Google Gemini API Key Anda di sini (harus diawali AIzaSy...)
+  // API key disimpan melalui tombol di antarmuka, bukan di dalam berkas sumber.
+  const GEMINI_API_KEY = "";
   //
   // PANDUAN PENGGUNAAN:
   // 1. Dapatkan API Key Google Gemini gratis di: https://aistudio.google.com/app/apikey
-  // 2. Anda dapat menaruh API Key di variabel GEMINI_API_KEY di atas, ATAU memasukkannya
-  //    secara langsung melalui tombol "🔑 API Key AI" di antarmuka web (tersimpan di browser).
+  // 2. Masukkan API key melalui tombol "API Key AI" di antarmuka; key tersimpan di browser.
   // 3. Jika API Key belum diisi, simulator tetap berfungsi 100% menggunakan Mesin Pakar
   //    Cerdas Rekayasa Lingkungan (Expert Rule Engine) bawaan RECHEMON.
   // =========================================================================
@@ -414,7 +413,8 @@
 
     // Camera & Zoom
     zoomLevel: 1.0,
-    currentFocusedTank: null
+    currentFocusedTank: null,
+    userZoomed: false
   };
 
   // --- DOM References ---
@@ -486,10 +486,13 @@
   // AI Hazardous Waste Advisor Inputs
   const inputGeminiApiKey = document.getElementById('inputGeminiApiKey');
   const btnSaveApiKey = document.getElementById('btnSaveApiKey');
+  const btnTestApiKey = document.getElementById('btnTestApiKey');
   const btnClearApiKey = document.getElementById('btnClearApiKey');
   const geminiKeyStatusBadge = document.getElementById('geminiKeyStatusBadge');
+  const apiKeyTestFeedback = document.getElementById('apiKeyTestFeedback');
   const wastePresetChips = document.querySelectorAll('#wastePresetChips .preset-chip');
   const aiWastePromptInput = document.getElementById('aiWastePromptInput');
+  const btnUseWasteProfilePrompt = document.getElementById('btnUseWasteProfilePrompt');
   const btnRunAiWasteAnalysis = document.getElementById('btnRunAiWasteAnalysis');
   const aiResultsContainer = document.getElementById('aiResultsContainer');
   const aiResultsLoading = document.getElementById('aiResultsLoading');
@@ -548,6 +551,7 @@
 
     // Update product choices cards in Modal 1 preview
     updateProductModalCards(profile);
+    syncWasteAdvisorPromptFromProfile(true);
   }
 
   function updateProductModalCards(profile) {
@@ -590,6 +594,8 @@
       const val = e.target.value;
       if (val !== 'custom') {
         applyWasteProfile(val);
+      } else {
+        syncWasteAdvisorPromptFromProfile(true);
       }
     });
   }
@@ -609,6 +615,7 @@
       if (selectWasteProfile && selectWasteProfile.value !== 'custom') {
         selectWasteProfile.value = 'custom';
       }
+      syncWasteAdvisorPromptFromProfile();
     });
   }
 
@@ -621,17 +628,33 @@
       if (selectWasteProfile && selectWasteProfile.value !== 'custom') {
         selectWasteProfile.value = 'custom';
       }
+      syncWasteAdvisorPromptFromProfile();
     });
   }
 
   // --- Pan & Zoom Controls with Strict Bounds ---
   function updateZoom(newZoom) {
     state.zoomLevel = Math.max(0.8, Math.min(1.5, newZoom));
-    track.style.transform = `scale(${state.zoomLevel})`;
+    // CSS zoom participates in layout and scroll measurements; transform scaling
+    // leaves an oversized, invisible scroll area around the flowchart.
+    track.style.zoom = state.zoomLevel;
     document.getElementById('zoomDisplay').textContent = `${Math.round(state.zoomLevel * 100)}%`;
+    if (state.currentFocusedTank) {
+      requestAnimationFrame(() => panToUnit(state.currentFocusedTank, false));
+    }
   }
 
-  function panToUnit(unitId) {
+  function fitFlowchartToWidth() {
+    const board = track.querySelector('.flowchart-board');
+    if (!board || !container.clientWidth) return;
+
+    const naturalBoardWidth = board.getBoundingClientRect().width / Math.max(state.zoomLevel, 0.01);
+    const trackSidePadding = 74;
+    const targetZoom = (container.clientWidth - 20) / (naturalBoardWidth + trackSidePadding);
+    updateZoom(Math.max(0.8, Math.min(1.5, targetZoom)));
+  }
+
+  function panToUnit(unitId, playSound = true) {
     const el = document.getElementById(unitId);
     if (!el) return;
 
@@ -643,17 +666,21 @@
     const cRect = container.getBoundingClientRect();
     const currentScroll = container.scrollLeft;
 
-    // Center offset strictly bounded between 0 and maxScroll
+    // Center the selected station on both axes and keep it inside the canvas.
     let targetScroll = currentScroll + (rect.left - cRect.left) - (cRect.width / 2) + (rect.width / 2);
     const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
     targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+    let targetScrollY = container.scrollTop + (rect.top - cRect.top) - (cRect.height / 2) + (rect.height / 2);
+    const maxScrollY = Math.max(0, container.scrollHeight - container.clientHeight);
+    targetScrollY = Math.max(0, Math.min(maxScrollY, targetScrollY));
 
     container.scrollTo({
       left: targetScroll,
+      top: targetScrollY,
       behavior: 'smooth'
     });
 
-    sfx.click();
+    if (playSound) sfx.click();
     updateMiniMapActive(unitId);
   }
 
@@ -666,13 +693,17 @@
   // --- Drag to Scroll & Wheel Scroll with Strict Boundary Clamping ---
   let isDragging = false;
   let startX = 0;
+  let startY = 0;
   let scrollLeft = 0;
+  let scrollTop = 0;
 
   container.addEventListener('mousedown', (e) => {
     if (e.target.closest('button, select, input, .clickable-tank, .holo-modal-card')) return;
     isDragging = true;
     startX = e.pageX - container.offsetLeft;
+    startY = e.pageY - container.offsetTop;
     scrollLeft = container.scrollLeft;
+    scrollTop = container.scrollTop;
   });
 
   window.addEventListener('mouseup', () => { isDragging = false; });
@@ -681,24 +712,50 @@
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - container.offsetLeft;
+    const y = e.pageY - container.offsetTop;
     const walk = (x - startX) * 1.3;
+    const walkY = (y - startY) * 1.3;
     const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+    const maxScrollY = Math.max(0, container.scrollHeight - container.clientHeight);
     container.scrollLeft = Math.max(0, Math.min(maxScroll, scrollLeft - walk));
+    container.scrollTop = Math.max(0, Math.min(maxScrollY, scrollTop - walkY));
   });
 
-  container.addEventListener('wheel', (e) => {
-    if (e.deltaY !== 0) {
-      e.preventDefault();
-      const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
-      const nextScroll = container.scrollLeft + e.deltaY * 1.1;
-      container.scrollLeft = Math.max(0, Math.min(maxScroll, nextScroll));
-    }
-  }, { passive: false });
+    container.addEventListener('wheel', (e) => {
+      const useHorizontalScroll = e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (useHorizontalScroll) {
+        const delta = e.shiftKey ? e.deltaY : e.deltaX;
+        const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+        const nextScroll = container.scrollLeft + delta * 1.1;
+        if (nextScroll !== container.scrollLeft) {
+          e.preventDefault();
+          container.scrollLeft = Math.max(0, Math.min(maxScroll, nextScroll));
+        }
+        return;
+      }
+
+      const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
+      const nextScroll = container.scrollTop + e.deltaY * 1.1;
+      if (nextScroll !== container.scrollTop) {
+        e.preventDefault();
+        container.scrollTop = Math.max(0, Math.min(maxScroll, nextScroll));
+      }
+    }, { passive: false });
 
   window.addEventListener('keydown', (e) => {
+    if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+    const maxScrollY = Math.max(0, container.scrollHeight - container.clientHeight);
     if (e.key === 'ArrowRight') container.scrollLeft = Math.min(maxScroll, container.scrollLeft + 140);
     if (e.key === 'ArrowLeft') container.scrollLeft = Math.max(0, container.scrollLeft - 140);
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      e.preventDefault();
+      container.scrollTop = Math.min(maxScrollY, container.scrollTop + (e.key === 'PageDown' ? 420 : 100));
+    }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      container.scrollTop = Math.max(0, container.scrollTop - (e.key === 'PageUp' ? 420 : 100));
+    }
   });
 
   // --- Step 1: Pour Raw Waste ---
@@ -807,13 +864,18 @@
   // JALUR 2: RESIDU PADAT (BOTTOM ROW: AI-1 -> MESIN MEKANIKAL -> PRODUK JADI)
   // ==========================================================================
 
-  function showAiLoadingBadge(elId, text = '🤖 Kalkulasi Gemini...') {
+  function showAiLoadingBadge(elId, text = '🤖 Menunggu analisis AI...') {
     const el = document.getElementById(elId);
     if (el) el.innerHTML = `<span style="color:#38bdf8; font-style:italic;">${text}</span>`;
   }
 
   function triggerAI1ResidueScan() {
-    if (!state.residueInTank) return;
+    if (!state.residueInTank) {
+      questBadge.textContent = 'TAHAP SEBELUMNYA DIPERLUKAN';
+      questText.innerHTML = 'Untuk memindai residu, klik <strong>Alirkan Limbah</strong> pada Tahap 1, lalu <strong>Jalankan Separator</strong> pada Tahap 2.';
+      panToUnit('unitRawTank');
+      return;
+    }
     panToUnit('unitResidueTank');
     sfx.laserScan();
     laserAI1.classList.add('active');
@@ -830,7 +892,7 @@
       showAiLoadingBadge('ai1MetalsDisplay');
       showAiLoadingBadge('ai1TclpDisplay', '🤖 Menganalisis TCLP...');
       document.getElementById('ai1RecommendationText').innerHTML =
-        '<span style="color:#38bdf8; font-style:italic;">⏳ Gemini AI sedang menganalisis karakteristik mineral residu padat...</span>';
+        '<span style="color:#38bdf8; font-style:italic;">⏳ AI sedang menganalisis karakteristik mineral residu padat...</span>';
       updateProductModalCards(profile);
       openModal(modalAI1);
       state.ai1Scanned = true;
@@ -849,8 +911,8 @@
         document.getElementById('ai1MetalsDisplay').textContent = ai1.metalsDisplay || profile.metalsDisplay;
         document.getElementById('ai1TclpDisplay').textContent = ai1.tclpDisplay || profile.tclpDisplay;
         document.getElementById('ai1RecommendationText').innerHTML =
-          `<strong>Hasil Analisis Sensor AI-1 (Gemini Real-Time):</strong><br>${ai1.recommendation || profile.recommendation}
-          <div style="margin-top:5px; font-size:9px; color:#00d2ff; text-align:right;">⚡ Dikalkulasi oleh Google Gemini 2.0 Flash secara real-time</div>`;
+          `<strong>Hasil Analisis Sensor AI-1 (${getActiveProviderLabel()}):</strong><br>${ai1.recommendation || profile.recommendation}
+          <div style="margin-top:5px; font-size:9px; color:#00d2ff; text-align:right;">⚡ Dianalisis online oleh ${getActiveProviderLabel()}</div>`;
         if (ai1.preferredProduct && ['semen', 'bata', 'kerikil'].includes(ai1.preferredProduct)) {
           state.selectedResidueProduct = ai1.preferredProduct;
           document.querySelectorAll('.product-option-card').forEach(c => c.classList.remove('selected'));
@@ -1237,7 +1299,7 @@
     const temp = ai4Data?.server_temp_estimate || '36.2 °C';
     const pue = ai4Data?.pue_estimate || '1.12';
     const ec = ai4Data?.ec_final || '';
-    const pueLabel = ai4Data ? `${pue} (Gemini AI Estimate)` : `${pue} (Top 5%)`;
+    const pueLabel = ai4Data ? `${pue} (AI Estimate)` : `${pue} (Top 5%)`;
 
     document.getElementById('serverTempDisplay').innerHTML = `
       <span style="color:#00f59b; font-weight:700;">${temp}</span>
@@ -1303,25 +1365,27 @@
 
   // ─────────────────────────────────────────────────────────────────────────
   // MULTI-PROVIDER AI ROUTER
-  // Detects key format and routes to the correct backend API:
-  //   AIzaSy...  → Google Gemini 2.0 Flash
-  //   sk-ant-... → Anthropic Claude 3 Haiku
-  //   sk-...     → OpenAI GPT-4o-mini
+  // Detects key format and routes to the selected provider API:
+  //   AIzaSy...   → Google Gemini 3.8 Flash (free tier)
+  //   gsk_...     → Groq GPT-OSS 20B (free plan)
+  //   sk-or-v1-...→ OpenRouter free model router
+  // Only free-tier providers are accepted to prevent accidental paid API usage.
   // Falls back to local dynamic calculation if no key / call fails.
   // ─────────────────────────────────────────────────────────────────────────
 
   function detectAIProvider(key) {
     if (!key || key.length < 8) return null;
     if (key.startsWith('AIzaSy')) return 'gemini';
-    if (key.startsWith('sk-ant-')) return 'anthropic';
-    if (key.startsWith('sk-')) return 'openai';
-    return 'gemini'; // unknown format — attempt gemini
+    if (key.startsWith('AQ.')) return 'gemini';
+    if (key.startsWith('gsk_')) return 'groq';
+    if (key.startsWith('sk-or-v1-')) return 'openrouter';
+    return null;
   }
 
   function getProviderLabel(provider) {
-    if (provider === 'openai') return '⚡ OpenAI GPT-4o-mini';
-    if (provider === 'anthropic') return '⚡ Anthropic Claude 3';
-    if (provider === 'gemini') return '⚡ Gemini 2.0 Flash';
+    if (provider === 'openrouter') return '⚡ OpenRouter Free Router';
+    if (provider === 'groq') return '⚡ Groq GPT-OSS 20B';
+    if (provider === 'gemini') return '⚡ Gemini 3.8 Flash · free tier';
     return '🧠 Kalkulasi Lokal';
   }
 
@@ -1331,27 +1395,52 @@
     return JSON.parse(cleaned);
   }
 
-  async function callGeminiProvider(systemPrompt, userPrompt, apiKey, signal) {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-    const payload = {
-      contents: [{ parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
-      generationConfig: { temperature: 0.25, responseMimeType: 'application/json' }
-    };
-    const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    return parseAIJson(data.candidates?.[0]?.content?.parts?.[0]?.text || '');
+  async function throwProviderResponseError(res, provider) {
+    const payload = await res.json().catch(() => ({}));
+    const apiError = payload?.error || payload;
+    const message = apiError?.message || apiError?.metadata?.raw || `HTTP ${res.status}`;
+    const error = new Error(message);
+    error.status = res.status;
+    error.provider = provider;
+    throw error;
   }
 
-  async function callOpenAIProvider(systemPrompt, userPrompt, apiKey, signal) {
-    const endpoint = 'https://api.openai.com/v1/chat/completions';
+  async function callGeminiProvider(systemPrompt, userPrompt, apiKey, signal) {
+    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/interactions';
     const payload = {
-      model: 'gpt-4o-mini',
+      model: 'gemini-3.8-flash',
+      system_instruction: systemPrompt,
+      input: userPrompt,
+      response_format: { type: 'text', mime_type: 'application/json' },
+      generation_config: { thinking_level: 'low' }
+    };
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify(payload),
+      signal
+    });
+    if (!res.ok) await throwProviderResponseError(res, 'gemini');
+    const data = await res.json();
+    const rawText = (data.steps || [])
+      .filter(step => step.type === 'model_output')
+      .flatMap(step => step.content || [])
+      .filter(part => part.type === 'text')
+      .map(part => part.text || '')
+      .join('\n');
+    return parseAIJson(rawText);
+  }
+
+  async function callGroqProvider(systemPrompt, userPrompt, apiKey, signal) {
+    const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+    const payload = {
+      model: 'openai/gpt-oss-20b',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
       temperature: 0.25,
+      max_completion_tokens: 1400,
       response_format: { type: 'json_object' }
     };
     const res = await fetch(endpoint, {
@@ -1360,52 +1449,58 @@
       body: JSON.stringify(payload),
       signal
     });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+    if (!res.ok) await throwProviderResponseError(res, 'groq');
     const data = await res.json();
     return parseAIJson(data.choices?.[0]?.message?.content || '');
   }
 
-  async function callAnthropicProvider(systemPrompt, userPrompt, apiKey, signal) {
-    const endpoint = 'https://api.anthropic.com/v1/messages';
+  async function callOpenRouterProvider(systemPrompt, userPrompt, apiKey, signal) {
+    const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
     const payload = {
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }]
+      model: 'openrouter/free',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.25,
+      response_format: { type: 'json_object' }
     };
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'X-Title': 'RECHEMON'
+    };
+    if (window.location.origin && window.location.origin !== 'null') {
+      headers['HTTP-Referer'] = window.location.origin;
+    }
     const res = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
+      headers,
       body: JSON.stringify(payload),
       signal
     });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+    if (!res.ok) await throwProviderResponseError(res, 'openrouter');
     const data = await res.json();
-    return parseAIJson(data.content?.[0]?.text || '');
+    return parseAIJson(data.choices?.[0]?.message?.content || '');
   }
 
   // Main entry point — all AI functions call this
-  async function callGemini(systemPrompt, userPrompt) {
-    const apiKey = getEffectiveGeminiKey();
+  async function callAIWithKey(systemPrompt, userPrompt, apiKey) {
     if (!apiKey) throw new Error('API Key belum dikonfigurasi');
 
     const provider = detectAIProvider(apiKey);
     if (!provider) throw new Error('Format API Key tidak dikenali');
 
-    // 15-second timeout via AbortController
+    // Give model generation time to finish before falling back to local results.
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
 
     try {
       let result;
-      if (provider === 'openai') {
-        result = await callOpenAIProvider(systemPrompt, userPrompt, apiKey, controller.signal);
-      } else if (provider === 'anthropic') {
-        result = await callAnthropicProvider(systemPrompt, userPrompt, apiKey, controller.signal);
+      if (provider === 'openrouter') {
+        result = await callOpenRouterProvider(systemPrompt, userPrompt, apiKey, controller.signal);
+      } else if (provider === 'groq') {
+        result = await callGroqProvider(systemPrompt, userPrompt, apiKey, controller.signal);
       } else {
         result = await callGeminiProvider(systemPrompt, userPrompt, apiKey, controller.signal);
       }
@@ -1413,9 +1508,13 @@
       return result;
     } catch (err) {
       clearTimeout(timeoutId);
-      if (err.name === 'AbortError') throw new Error('Timeout 15s — menggunakan data lokal');
+      if (err.name === 'AbortError') throw new Error('Permintaan melewati batas waktu 45 detik');
       throw err;
     }
+  }
+
+  async function callGemini(systemPrompt, userPrompt) {
+    return callAIWithKey(systemPrompt, userPrompt, getEffectiveGeminiKey());
   }
 
   // Convenience: get current provider label for the thinking window
@@ -1601,9 +1700,44 @@ ai4PolishNote: ${profile.ai4PolishNote}`;
     }
   };
 
-  // Helper untuk membaca API Key (dari variabel GEMINI_API_KEY di baris 24 atau dari localStorage browser)
+  let aiWastePromptManuallyEdited = false;
+
+  function getWasteAdvisorProfilePrompt() {
+    const profile = getActiveProfile();
+    const profileDetails = {
+      electroplating: 'Sludge elektroplating nikel-kromium (Ni/Cr), berasal dari proses pelapisan logam.',
+      textile: 'Lumpur tekstil dengan serat selulosa dan pigmen/zat warna organik, COD tinggi, serta kondisi awal basa.',
+      mineral: 'Slurry semen/mineral kaya silika amorf dan aluminosilikat; kadar silika tinggi saja tidak membuktikan limbah berbahaya atau tidak layak dimanfaatkan.',
+      petrochemical: 'Residu kilang petrokimia dengan fraksi minyak/hidrokarbon dan karakteristik bitumen.'
+    };
+    const profileKey = state.selectedWasteProfile;
+    const details = profileDetails[profileKey] || 'Limbah dengan karakteristik khusus yang perlu diperiksa lebih lanjut.';
+    const customSettings = selectWasteProfile?.value === 'custom'
+      ? ' Pengguna sedang memakai setelan kustom; jangan mengasumsikan kontaminan di luar data yang tercantum.'
+      : '';
+
+    return `Profil limbah yang dipilih pada simulator: ${profile.name}. ${details}${customSettings}\nData proses: rasio residu padat ${state.customSolidRatio}%, pH ${state.customPh.toFixed(1)}, logam terlarut ${state.customMetals}, COD ${state.customCod}, TDS ${state.customTds}.\nEvaluasi alternatif selain paving block/semen konvensional berdasarkan data ini. Jangan menambahkan kontaminan, hasil uji, atau sertifikasi yang tidak tersedia; nyatakan bila data laboratorium masih diperlukan.`;
+  }
+
+  function syncWasteAdvisorPromptFromProfile(force = false) {
+    if (!aiWastePromptInput || (aiWastePromptManuallyEdited && !force)) return;
+    aiWastePromptInput.value = getWasteAdvisorProfilePrompt();
+    if (force) aiWastePromptManuallyEdited = false;
+    wastePresetChips.forEach(chip => chip.classList.remove('active'));
+  }
+
+  let inMemoryApiKey = '';
+  let apiKeyStoragePersistent = true;
+
+  // Browser storage is scoped to this browser and site origin; file:// may reject it.
   function getEffectiveGeminiKey() {
-    const savedInBrowser = localStorage.getItem('RECHEMON_GEMINI_API_KEY');
+    let savedInBrowser = '';
+    try {
+      savedInBrowser = window.localStorage.getItem('RECHEMON_GEMINI_API_KEY') || '';
+    } catch (error) {
+      apiKeyStoragePersistent = false;
+    }
+    savedInBrowser = savedInBrowser || inMemoryApiKey;
     if (savedInBrowser && savedInBrowser.trim().length > 0) {
       return savedInBrowser.trim();
     }
@@ -1618,14 +1752,51 @@ ai4PolishNote: ${profile.ai4PolishNote}`;
     const key = getEffectiveGeminiKey();
     if (key) {
       const masked = key.length > 10 ? (key.substring(0, 6) + '...' + key.substring(key.length - 4)) : 'Terpasang';
-      geminiKeyStatusBadge.textContent = `✓ API Key Aktif (${masked})`;
-      geminiKeyStatusBadge.className = 'status-tag tag-ready';
-      inputGeminiApiKey.placeholder = `Tersimpan: ${masked}`;
+      const provider = detectAIProvider(key);
+      geminiKeyStatusBadge.textContent = provider
+        ? `Key tersimpan · ${getProviderLabel(provider)} · belum diuji (${masked})`
+        : 'Format API Key tidak dikenali';
+      geminiKeyStatusBadge.className = provider ? 'key-status-badge is-saved' : 'key-status-badge is-error';
+      inputGeminiApiKey.placeholder = apiKeyStoragePersistent
+        ? `Tersimpan: ${masked}`
+        : `Tersimpan sementara di sesi ini: ${masked}`;
     } else {
       geminiKeyStatusBadge.textContent = '⚙️ Model Pakar RECHEMON Bawaan (Offline Ready)';
-      geminiKeyStatusBadge.className = 'status-tag tag-idle';
-      inputGeminiApiKey.placeholder = 'Paste Google Gemini API Key di sini (Opsional)...';
+      geminiKeyStatusBadge.className = 'key-status-badge';
+      inputGeminiApiKey.placeholder = 'Masukkan key gratis Gemini, Groq, atau OpenRouter...';
     }
+  }
+
+  function setApiKeyTestFeedback(message = '', status = 'info') {
+    if (!apiKeyTestFeedback) return;
+    apiKeyTestFeedback.textContent = message;
+    apiKeyTestFeedback.hidden = !message;
+    apiKeyTestFeedback.className = message ? `api-key-test-feedback is-${status}` : 'api-key-test-feedback';
+  }
+
+  function describeConnectionTestFailure(error, provider) {
+    const message = error?.message || 'Kesalahan tidak diketahui';
+    const status = Number(error?.status) || Number(message.match(/\bHTTP\s+(\d{3})\b/i)?.[1]) || 0;
+
+    if (status === 401) {
+      return 'Key ditolak (401). Key mungkin salah, sudah dicabut, atau sudah kedaluwarsa. Karena key yang tadi dikirim di chat sudah terekspos, cabut key itu dan tempel key pengganti hanya ke kolom aplikasi.';
+    }
+    if (status === 402) {
+      return `${getProviderLabel(provider)} menolak permintaan (402). Periksa status akun, batas penggunaan, dan ketersediaan model gratis di dashboard penyedia. Detail: ${message}`;
+    }
+    if (status === 403) {
+      return `${getProviderLabel(provider)} menolak akses (403). Periksa izin key dan akses akun/model. Detail: ${message}`;
+    }
+    if (status === 429) {
+      return `${getProviderLabel(provider)} membatasi permintaan (429). Tunggu lalu coba lagi, atau periksa batas kuota gratis. Detail: ${message}`;
+    }
+    if (/failed to fetch|networkerror|load failed|cors|network request failed/i.test(message)) {
+      const localFileHint = window.location.protocol === 'file:'
+        ? 'Halaman ini dibuka sebagai file lokal. Jalankan simulation.html melalui VS Code Live Server atau alamat localhost, lalu tes lagi.'
+        : 'Periksa koneksi internet dan kemungkinan pemblokiran jaringan atau CORS.';
+      return `Browser tidak berhasil menghubungi ${getProviderLabel(provider)}. ${localFileHint}`;
+    }
+    return `Tes ${getProviderLabel(provider)} gagal. Detail dari penyedia: ${message}.`;
   }
 
   // Event Listener simpan/hapus API Key dari antarmuka
@@ -1633,20 +1804,75 @@ ai4PolishNote: ${profile.ai4PolishNote}`;
     btnSaveApiKey.addEventListener('click', () => {
       const val = inputGeminiApiKey.value.trim();
       if (!val) {
-        alert('Silakan masukkan API Key Gemini yang valid terlebih dahulu.');
+        alert('Silakan masukkan API key terlebih dahulu.');
         return;
       }
-      localStorage.setItem('RECHEMON_GEMINI_API_KEY', val);
+      if (!detectAIProvider(val)) {
+        alert('Key tidak dikenali. Untuk mode gratis, gunakan Gemini (AQ.... atau AIzaSy...), Groq (gsk_...), atau OpenRouter (sk-or-v1-...).');
+        return;
+      }
+      inMemoryApiKey = val;
+      setApiKeyTestFeedback();
+      try {
+        window.localStorage.setItem('RECHEMON_GEMINI_API_KEY', val);
+        apiKeyStoragePersistent = true;
+      } catch (error) {
+        apiKeyStoragePersistent = false;
+      }
       inputGeminiApiKey.value = '';
       updateApiKeyStatusUI();
       sfx.success();
-      alert('✓ API Key berhasil disimpan di memori browser Anda! Model Gemini AI sekarang aktif secara online.');
+      alert(apiKeyStoragePersistent
+        ? 'API key tersimpan di browser. Tekan Tes Koneksi untuk memastikan key dan kuota penyedia berfungsi.'
+        : 'Penyimpanan browser tidak tersedia. API key hanya dipakai selama halaman ini terbuka. Tekan Tes Koneksi untuk memeriksa akses.');
+    });
+  }
+
+  if (btnTestApiKey) {
+    btnTestApiKey.addEventListener('click', async () => {
+      const apiKey = inputGeminiApiKey.value.trim() || getEffectiveGeminiKey();
+      const provider = detectAIProvider(apiKey);
+      if (!apiKey || !provider) {
+        alert('Masukkan key yang formatnya dikenali, lalu tekan Tes Koneksi.');
+        return;
+      }
+
+      btnTestApiKey.disabled = true;
+      btnTestApiKey.textContent = 'Menguji...';
+      geminiKeyStatusBadge.textContent = `Menguji koneksi ${getProviderLabel(provider)}...`;
+      geminiKeyStatusBadge.className = 'key-status-badge is-saved';
+      setApiKeyTestFeedback('Mengirim tes singkat ke penyedia AI…', 'info');
+      try {
+        await callAIWithKey(
+          'Balas hanya dengan JSON valid: {"connected":true}.',
+          'Tes koneksi singkat. Balas {"connected":true}.',
+          apiKey
+        );
+        geminiKeyStatusBadge.textContent = `Koneksi berhasil · ${getProviderLabel(provider)}`;
+        geminiKeyStatusBadge.className = 'key-status-badge is-success';
+        setApiKeyTestFeedback('Berhasil. API key dan model dapat dipakai. Jika key belum disimpan, tekan “Simpan Key” agar tetap tersedia setelah halaman dimuat ulang.', 'success');
+      } catch (error) {
+        const feedback = describeConnectionTestFailure(error, provider);
+        geminiKeyStatusBadge.textContent = `${getProviderLabel(provider)} gagal${error?.status ? ` · HTTP ${error.status}` : ''}`;
+        geminiKeyStatusBadge.className = 'key-status-badge is-error';
+        setApiKeyTestFeedback(feedback, 'error');
+      } finally {
+        btnTestApiKey.disabled = false;
+        btnTestApiKey.textContent = 'Tes Koneksi';
+      }
     });
   }
 
   if (btnClearApiKey) {
     btnClearApiKey.addEventListener('click', () => {
-      localStorage.removeItem('RECHEMON_GEMINI_API_KEY');
+      inMemoryApiKey = '';
+      setApiKeyTestFeedback();
+      try {
+        window.localStorage.removeItem('RECHEMON_GEMINI_API_KEY');
+        apiKeyStoragePersistent = true;
+      } catch (error) {
+        apiKeyStoragePersistent = false;
+      }
       inputGeminiApiKey.value = '';
       updateApiKeyStatusUI();
       sfx.click();
@@ -1684,11 +1910,30 @@ ai4PolishNote: ${profile.ai4PolishNote}`;
         wastePresetChips.forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         const key = chip.dataset.preset;
-        if (aiWastePresets[key] && aiWastePromptInput) {
-          aiWastePromptInput.value = aiWastePresets[key].prompt;
+        if (aiWastePromptInput) {
+          aiWastePromptInput.value = aiWastePresets[key]?.prompt || '';
+          aiWastePromptManuallyEdited = true;
+          if (key === 'custom') aiWastePromptInput.focus();
           sfx.click();
         }
       });
+    });
+  }
+
+  if (btnUseWasteProfilePrompt) {
+    btnUseWasteProfilePrompt.addEventListener('click', () => {
+      syncWasteAdvisorPromptFromProfile(true);
+      sfx.click();
+    });
+  }
+
+  // Awali advisor dengan karakteristik yang sedang dipilih pada simulator.
+  syncWasteAdvisorPromptFromProfile(true);
+
+  if (aiWastePromptInput) {
+    aiWastePromptInput.addEventListener('input', () => {
+      aiWastePromptManuallyEdited = true;
+      wastePresetChips.forEach(chip => chip.classList.remove('active'));
     });
   }
 
@@ -1744,6 +1989,42 @@ ai4PolishNote: ${profile.ai4PolishNote}`;
       };
     }
 
+    if (text.includes('electroplating') || text.includes('elektroplating') || text.includes('nikel-kromium') || text.includes('ni/cr')) {
+      return {
+        wasteName: 'Sludge Elektroplating Nikel-Kromium (Ni/Cr)',
+        unfitReason: 'Sludge proses pelapisan logam perlu dinilai berdasarkan spesiasi logam dan uji lindi. Pengikatan ke semen biasa saja tidak membuktikan nikel atau kromium aman dan stabil dalam penggunaan jangka panjang.',
+        batTechnology: 'Pemisahan Hidrometalurgi Selektif Ni/Cr & Stabilisasi Residu',
+        processExplanation: '1. Karakterisasi dan pisahkan spesiasi logam di laboratorium. 2. Pulihkan fraksi nikel/kromium melalui pelindian selektif dan pengendapan terkontrol. 3. Uji residu; stabilisasi dan pengelolaan lanjut mengikuti hasil TCLP serta ketentuan limbah yang berlaku.',
+        finalProduct: 'Konsentrat Ni/Cr untuk pemurnian lanjutan dan residu terolah untuk pengelolaan aman',
+        productSpecs: 'Kadar logam pulihan, mutu konsentrat, dan kelulusan uji lindi harus ditentukan melalui analisis laboratorium.',
+        safetyCert: 'Wajib karakterisasi limbah dan verifikasi TCLP sebelum pemanfaatan atau pelepasan residu'
+      };
+    }
+
+    if (text.includes('tekstil') || text.includes('zat warna') || text.includes('pigmen') || text.includes('selulosa')) {
+      return {
+        wasteName: 'Lumpur Tekstil Berserat dan Mengandung Pigmen Organik',
+        unfitReason: 'Pigmen, bahan organik, dan serat dapat mengganggu ikatan serta mutu produk semen. COD tinggi juga menandakan perlunya pengolahan dan verifikasi kontaminan sebelum residu dimanfaatkan.',
+        batTechnology: 'Pemisahan Serat, Oksidasi Lanjutan, dan Pengolahan Residu Terarah',
+        processExplanation: '1. Pisahkan fraksi serat dan air untuk mengurangi beban organik. 2. Uji jenis zat warna, lalu pilih oksidasi atau adsorpsi yang sesuai. 3. Karakterisasi lumpur sisa dan tentukan pemulihan atau pengelolaan akhirnya berdasarkan hasil uji.',
+        finalProduct: 'Serat pulihan untuk evaluasi pemanfaatan dan residu terolah sesuai hasil karakterisasi',
+        productSpecs: 'Mutu serat, sisa zat warna, COD, dan kelayakan residu harus diuji; simulator tidak mengklaim produk aman sebelum verifikasi.',
+        safetyCert: 'Verifikasi laboratorium untuk COD, zat warna residual, dan karakteristik lindi'
+      };
+    }
+
+    if (text.includes('slurry silika') || text.includes('silika amorf') || text.includes('aluminosilikat') || text.includes('semen/mineral')) {
+      return {
+        wasteName: 'Slurry Mineral Kaya Silika dan Aluminosilikat',
+        unfitReason: 'Data profil menunjukkan silika tinggi, tetapi tidak cukup untuk menyimpulkan residu ini berbahaya atau gagal sebagai bahan konstruksi. Kelayakan perlu ditentukan lewat uji komposisi, lindi, dan performa material.',
+        batTechnology: 'Karakterisasi Mineral & Pemulihan Silika Selektif',
+        processExplanation: '1. Ukur komposisi mineral, ukuran partikel, dan kontaminan. 2. Pisahkan atau murnikan fraksi silika yang memenuhi kebutuhan proses. 3. Jika uji material atau uji lindi gagal, pilih stabilisasi atau jalur pengelolaan berdasarkan penyebabnya.',
+        finalProduct: 'Bahan baku silika/mineral untuk pemanfaatan terverifikasi atau residu yang dikelola sesuai hasil uji',
+        productSpecs: 'Komposisi, kekuatan produk, dan kelulusan TCLP belum dapat dipastikan dari simulator; perlu pengujian sampel.',
+        safetyCert: 'Pemanfaatan hanya setelah memenuhi persyaratan teknis dan lingkungan yang berlaku'
+      };
+    }
+
     // Solusi Umum B3 Kompleks
     return {
       wasteName: "Limbah Padat B3 Karakteristik Kimia Kompleks Non-Paving",
@@ -1777,20 +2058,25 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
   function renderAiResults(solution, isOnline = false, extraNote = '') {
     if (!aiResultsContent) return;
 
+    if (aiResultsContainer) aiResultsContainer.style.display = 'block';
+    if (aiResultsLoading) aiResultsLoading.style.display = 'none';
+    aiResultsContent.style.display = 'block';
+
     const sourceBadge = isOnline
-      ? `<span class="status-tag tag-ready" style="font-size:10px;">⚡ Google Gemini 2.0 Flash AI (Online)</span>`
-      : `<span class="status-tag tag-ready" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:#38bdf8; font-size:10px;">🧠 Sistem Pakar Rekayasa RECHEMON (Best Available Technology)</span>`;
+      ? `<span class="status-tag tag-ready" style="font-size:10px;">${getActiveProviderLabel()} (Online)</span>`
+      : `<span class="status-tag tag-ready" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:#38bdf8; font-size:10px;">🧠 Mesin Pakar RECHEMON (simulasi lokal)</span>`;
 
     const noteHtml = extraNote
-      ? `<div style="font-size:10px; color:#f59e0b; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); padding:4px 8px; border-radius:4px; margin-bottom:8px;">${extraNote}</div>`
+      ? `<div style="font-size:10px; color:#f59e0b; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); padding:8px 10px; border-radius:6px; margin-bottom:8px; line-height:1.5;">${escapeHtml(extraNote)}</div>`
       : '';
 
     aiResultsContent.innerHTML = `
       ${noteHtml}
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid rgba(0,210,255,0.2); padding-bottom:6px;">
-        <strong style="color:#ffffff; font-size:12px;">Hasil Diagnosis Rekayasa Khusus AI:</strong>
+        <strong style="color:#ffffff; font-size:12px;">Opsi evaluasi awal:</strong>
         ${sourceBadge}
       </div>
+      <p style="font-size:10px; color:#fcd34d; line-height:1.5; margin:0 0 10px;">Hasil ini hanya simulasi awal. Komposisi, keamanan, spesifikasi, dan kelayakan produk harus diuji oleh laboratorium serta ditinjau ahli sebelum dipakai.</p>
 
       <!-- Card 1: Diagnosis & Larangan Paving -->
       <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35); border-radius:8px; padding:10px; margin-bottom:10px;">
@@ -1798,8 +2084,8 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
           <span style="font-size:14px;">⚠️</span>
           <strong style="color:#f87171; font-size:11px;">Karakteristik & Alasan Dilarang Dijadikan Paving Block:</strong>
         </div>
-        <p style="font-size:11px; color:#fecaca; margin:0 0 6px 0; line-height:1.4;">${solution.unfitReason}</p>
-        <div style="font-size:10px; color:#94a3b8;">Jenis Limbah: <strong style="color:#e2e8f0;">${solution.wasteName}</strong></div>
+        <p style="font-size:11px; color:#fecaca; margin:0 0 6px 0; line-height:1.4;">${escapeHtml(solution.unfitReason)}</p>
+        <div style="font-size:10px; color:#94a3b8;">Jenis Limbah: <strong style="color:#e2e8f0;">${escapeHtml(solution.wasteName)}</strong></div>
       </div>
 
       <!-- Card 2: Solusi Teknologi BAT -->
@@ -1808,8 +2094,8 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
           <span style="font-size:14px;">🔬</span>
           <strong style="color:#00d2ff; font-size:11px;">Teknologi Pengolahan Terbaik (Best Available Technology - BAT):</strong>
         </div>
-        <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:4px;">${solution.batTechnology}</div>
-        <p style="font-size:11px; color:#cbd5e1; margin:0; line-height:1.4;">${solution.processExplanation}</p>
+        <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:4px;">${escapeHtml(solution.batTechnology)}</div>
+        <p style="font-size:11px; color:#cbd5e1; margin:0; line-height:1.4;">${escapeHtml(solution.processExplanation)}</p>
       </div>
 
       <!-- Card 3: Produk Akhir & Spesifikasi -->
@@ -1818,8 +2104,8 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
           <span style="font-size:14px;">💎</span>
           <strong style="color:#00f59b; font-size:11px;">Produk Akhir Bernilai Tinggi & Ramah Lingkungan:</strong>
         </div>
-        <div style="font-size:12px; font-weight:700; color:#4ade80; margin-bottom:4px;">${solution.finalProduct}</div>
-        <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">Spesifikasi: <span style="color:#e2e8f0;">${solution.productSpecs}</span></div>
+        <div style="font-size:12px; font-weight:700; color:#4ade80; margin-bottom:4px;">${escapeHtml(solution.finalProduct)}</div>
+        <div style="font-size:10px; color:#94a3b8; margin-bottom:6px;">Spesifikasi: <span style="color:#e2e8f0;">${escapeHtml(solution.productSpecs)}</span></div>
         <div style="display:inline-block; font-size:9px; color:#00f59b; background:rgba(0,245,155,0.15); border:1px solid rgba(0,245,155,0.3); padding:2px 8px; border-radius:4px; font-weight:600;">
           🛡️ ${solution.safetyCert}
         </div>
@@ -1840,6 +2126,38 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
     }
   }
 
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
+  }
+
+  function describeApiFailure(error) {
+    const message = error?.message || 'Kesalahan tidak diketahui';
+    const provider = error?.provider || detectAIProvider(getEffectiveGeminiKey());
+    let nextStep = 'Periksa koneksi internet, API key, dan akses model pada akun penyedia.';
+
+    if (/api.key.*(invalid|not valid)|api_key_invalid|unauthorized|401/i.test(message)) {
+      nextStep = provider === 'gemini'
+        ? 'Buat key baru di Google AI Studio dan pastikan key mengizinkan Gemini API.'
+        : 'Periksa kembali API key dan status akun penyedia.';
+    } else if (/permission_denied|service_blocked|referer|referrer|403|forbidden/i.test(message)) {
+      nextStep = 'Periksa izin API dan batasan key. Jika halaman dibuka sebagai file lokal, coba jalankan melalui localhost.';
+    } else if (/quota|resource_exhausted|rate.?limit|429/i.test(message)) {
+      nextStep = 'Kuota atau batas permintaan akun sudah tercapai; periksa kuota dan billing pada akun penyedia.';
+    } else if (/failed to fetch|networkerror|load failed|cors/i.test(message)) {
+      nextStep = 'Browser tidak dapat menjangkau API. Periksa jaringan, izin CORS penyedia, dan jalankan halaman melalui localhost.';
+    } else if (/model.*(not found|retired|unsupported)|not found/i.test(message)) {
+      nextStep = 'Model API tidak tersedia untuk key ini. Periksa model aktif dan akses akun penyedia.';
+    }
+
+    return `${getProviderLabel(provider)} gagal: ${message}. ${nextStep} Hasil di bawah ini berasal dari simulasi lokal, bukan jawaban online.`;
+  }
+
   // Terapkan Solusi AI Khusus ke Mesin dan Etalase
   function applyAiCustomSolutionToPlant(solution) {
     closeModal(modalResidueAiSolver);
@@ -1851,7 +2169,7 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
     const showcaseContent = document.getElementById('productShowcaseContent');
 
     if (arrowResidueToMachine) arrowResidueToMachine.classList.add('flowing');
-    machineStatus.innerHTML = `<span style="color:#00d2ff; font-weight:700;">[REAKSI AI: ${solution.batTechnology}]</span>`;
+    machineStatus.innerHTML = `<span style="color:#00d2ff; font-weight:700;">[REAKSI AI: ${escapeHtml(solution.batTechnology)}]</span>`;
     machineGear.classList.add('spinning');
 
     state.residueProcessing = true;
@@ -1866,24 +2184,20 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
 
       // Show Custom AI Product Card in Showcase
       showcaseContent.innerHTML = `
-        <div class="ai-custom-product-card" style="background:linear-gradient(135deg, rgba(0,210,255,0.15), rgba(168,85,247,0.15)); border:1px solid #00d2ff; border-radius:8px; padding:10px; text-align:center; box-shadow:0 0 15px rgba(0,210,255,0.25);">
-          <div style="font-size:24px; margin-bottom:4px;">💎</div>
-          <span style="background:rgba(0,210,255,0.25); color:#00f59b; font-size:9px; font-weight:800; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:6px;">
-            ★ SOLUSI REKAYASA KHUSUS AI
-          </span>
-          <strong style="color:#ffffff; font-size:12px; display:block; line-height:1.3;">${solution.finalProduct}</strong>
-          <small style="color:#38bdf8; font-size:10px; display:block; margin:4px 0;">Teknologi: ${solution.batTechnology}</small>
-          <span style="font-size:9px; color:#cbd5e1; display:block; margin-bottom:6px;">${solution.productSpecs}</span>
-          <div style="display:inline-block; font-size:9px; color:#00f59b; background:rgba(0,245,155,0.1); border:1px solid rgba(0,245,155,0.3); padding:2px 6px; border-radius:4px;">
-            🛡️ ${solution.safetyCert}
-          </div>
+        <div class="ai-custom-product-card">
+          <div class="ai-product-icon">💎</div>
+          <span class="ai-product-badge">★ SOLUSI REKAYASA KHUSUS AI</span>
+          <strong class="ai-product-name">${escapeHtml(solution.finalProduct)}</strong>
+          <span class="ai-product-technology">Teknologi: ${escapeHtml(solution.batTechnology)}</span>
+          <span class="ai-product-specs">${escapeHtml(solution.productSpecs)}</span>
+          <span class="ai-product-cert">🛡️ ${escapeHtml(solution.safetyCert)}</span>
         </div>
       `;
 
       panToUnit('unitProductShowcase');
 
       questBadge.textContent = 'SOLUSI AI KHUSUS SELESAI';
-      questText.innerHTML = `Limbah berhasil diolah dengan <strong>${solution.batTechnology}</strong> menjadi <strong>${solution.finalProduct}</strong>. Sekarang periksa <strong>Jalur 1: Pemurnian Air & Coolant (Atas)</strong>!`;
+      questText.innerHTML = `Limbah berhasil diolah dengan <strong>${escapeHtml(solution.batTechnology)}</strong> menjadi <strong>${escapeHtml(solution.finalProduct)}</strong>. Sekarang periksa <strong>Jalur 1: Pemurnian Air & Coolant (Atas)</strong>!`;
 
       btnWaterBranch.classList.add('active');
     }, 2200);
@@ -1899,6 +2213,7 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
       }
 
       sfx.laserScan();
+      if (aiResultsContainer) aiResultsContainer.style.display = 'block';
       if (aiResultsLoading) aiResultsLoading.style.display = 'block';
       if (aiResultsContent) aiResultsContent.style.display = 'none';
 
@@ -1912,7 +2227,7 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
           hideAiThinkingWindow();
           if (aiResultsLoading) aiResultsLoading.style.display = 'none';
           if (aiResultsContent) aiResultsContent.style.display = 'block';
-          renderAiResults(solution, true, provLabelWaste);
+          renderAiResults(solution, true);
           sfx.success();
           return;
         } catch (err) {
@@ -1921,7 +2236,7 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
           const fallbackSolution = generateExpertWasteSolution(promptText);
           if (aiResultsLoading) aiResultsLoading.style.display = 'none';
           if (aiResultsContent) aiResultsContent.style.display = 'block';
-          renderAiResults(fallbackSolution, false, `Catatan: Gemini API (${err.message}). Menampilkan rekomendasi terverifikasi dari Mesin Pakar Rekayasa RECHEMON.`);
+          renderAiResults(fallbackSolution, false, describeApiFailure(err));
           sfx.success();
           return;
         }
@@ -1955,6 +2270,7 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
       e.stopPropagation();
       const parentUnit = btn.closest('.plant-unit');
       if (parentUnit) {
+        state.userZoomed = true;
         updateZoom(1.3);
         panToUnit(parentUnit.id);
       }
@@ -1962,9 +2278,22 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
   });
 
   // Zoom Controls
-  btnZoomIn.addEventListener('click', () => updateZoom(state.zoomLevel + 0.15));
-  btnZoomOut.addEventListener('click', () => updateZoom(state.zoomLevel - 0.15));
-  btnZoomReset.addEventListener('click', () => updateZoom(1.0));
+  btnZoomIn.addEventListener('click', () => {
+    state.userZoomed = true;
+    updateZoom(state.zoomLevel + 0.15);
+  });
+  btnZoomOut.addEventListener('click', () => {
+    state.userZoomed = true;
+    updateZoom(state.zoomLevel - 0.15);
+  });
+  btnZoomReset.addEventListener('click', () => {
+    state.userZoomed = false;
+    fitFlowchartToWidth();
+  });
+
+  window.addEventListener('resize', () => {
+    if (!state.userZoomed) requestAnimationFrame(fitFlowchartToWidth);
+  });
 
   // Sound Toggle
   btnSound.addEventListener('click', () => {
@@ -1981,5 +2310,13 @@ Berikan solusi teknologi terbaik (Best Available Technology / BAT) dalam format 
 
   // Initialize Default State
   applyWasteProfile('electroplating');
-  panToUnit('unitRawTank');
+  const initializeCanvas = () => {
+    fitFlowchartToWidth();
+    panToUnit('unitRawTank', false);
+  };
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(initializeCanvas);
+  } else {
+    requestAnimationFrame(initializeCanvas);
+  }
 })();

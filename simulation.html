@@ -41,13 +41,13 @@
       <!-- HUD Controls -->
       <div class="hud-actions">
         <button type="button" class="hud-btn" id="btnHudApiKey"
-          title="Atur API Key Google Gemini untuk Solusi AI Limbah"
+          title="Pilih dan tes API AI gratis untuk solusi limbah"
           style="color:#fbbf24; border-color:rgba(251,191,36,0.4);">🔑 API Key AI</button>
         <button type="button" class="hud-btn" id="btnZoomOut" title="Perkecil Tampilan (Zoom Out)">🔍 -</button>
         <span id="zoomDisplay"
           style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted); min-width:36px; text-align:center;">100%</span>
         <button type="button" class="hud-btn" id="btnZoomIn" title="Perbesar Tampilan (Zoom In)">🔍 +</button>
-        <button type="button" class="hud-btn" id="btnZoomReset" title="Reset Zoom">↺ 100%</button>
+        <button type="button" class="hud-btn" id="btnZoomReset" title="Sesuaikan Alur dengan Lebar Halaman">↺ Fit</button>
         <button type="button" class="hud-btn btn-accent" id="btnToggleSound">🔊 Suara: Nyala</button>
         <button type="button" class="hud-btn" id="btnResetSim" title="Ulangi dari Awal">↺ Reset</button>
         <a href="index.html" class="hud-btn" style="text-decoration:none;">Dashboard ↗</a>
@@ -55,7 +55,8 @@
     </header>
 
     <!-- SCROLLABLE & ZOOMABLE PANORAMIC CANVAS -->
-    <main class="canvas-container" id="canvasContainer">
+    <main class="canvas-container" id="canvasContainer"
+      aria-label="Peta proses. Roda mouse menggulir atas dan bawah; Shift dengan roda mouse menggulir ke samping; seret kanvas untuk berpindah bebas.">
       <div class="panoramic-track" id="panoramicTrack">
 
         <!-- FLOWCHART BOARD -->
@@ -459,7 +460,7 @@
                 <div class="flow-arrow-connector" id="arrowMachineToProduct">→</div>
 
                 <!-- STATION 9: PRODUCT SHOWCASE -->
-                <section class="plant-unit" id="unitProductShowcase" style="border-color:#f59e0b; width:240px;">
+                <section class="plant-unit" id="unitProductShowcase" style="border-color:#f59e0b; width:340px;">
                   <button type="button" class="zoom-target-btn" title="Lihat Lebih Dekat">🔍</button>
                   <div class="unit-header">
                     <span class="unit-tag" style="background:rgba(245,158,11,0.2); color:#f59e0b;">OUTPUT 2</span>
@@ -468,13 +469,12 @@
                   <h2 class="unit-title">Produk Jadi Sirkular</h2>
                   <p class="unit-desc">Material atau produk bernilai ekonomi hasil olahan.</p>
 
-                  <div class="tank-vessel" style="background:#0a140f; padding:8px; justify-content:center;">
-                    <div id="productShowcaseContent" style="text-align:center;">
-                      <div style="font-size:24px; margin-bottom:4px;">🏢</div>
-                      <strong style="color:#fbbf24; font-size:11px; display:block;">Semen Ramah Lingkungan</strong>
-                      <span style="font-size:9px; color:#94a3b8; display:block; margin-top:2px;">Kuat Tekan 38.5
-                        MPa</span>
-                      <span style="font-size:9px; color:#00f59b;">TCLP Non-Toxic Pass</span>
+                  <div class="tank-vessel product-showcase-vessel">
+                    <div id="productShowcaseContent" class="product-showcase-content">
+                      <div class="product-showcase-icon">🏢</div>
+                      <strong class="product-showcase-name">Semen Ramah Lingkungan</strong>
+                      <span class="product-showcase-spec">Kuat Tekan 38.5 MPa</span>
+                      <span class="product-showcase-cert">TCLP Non-Toxic Pass</span>
                     </div>
                   </div>
 
@@ -760,6 +760,7 @@
           🚀 Alirkan Air Murni ke Server AI Cool Down →
         </button>
       </div>
+    </div>
       <!-- MODAL 5: RECHEMON AI SOLID WASTE ADVISOR (POWERED BY GEMINI) -->
       <div class="holo-modal-overlay" id="modalResidueAiSolver">
         <div class="holo-modal-card ai-solver-modal-card">
@@ -776,22 +777,27 @@
           <!-- API KEY SETTING BANNER -->
           <div class="ai-api-key-banner">
             <div class="key-status-row">
-              <span class="key-label">🔑 <strong>Google Gemini API Key:</strong></span>
+              <span class="key-label">🔑 <strong>API Key AI:</strong></span>
               <span class="key-status-badge" id="geminiKeyStatusBadge">Status: Siap (Expert Engine / API)</span>
             </div>
             <div class="key-input-row">
-              <input type="password" id="inputGeminiApiKey" class="api-key-input"
-                placeholder="Masukkan Gemini API Key (AIzaSy...) atau edit di file simulation.js">
+              <input type="password" id="inputGeminiApiKey" class="api-key-input" autocomplete="new-password"
+                placeholder="Pilih satu key gratis: Gemini, Groq, atau OpenRouter">
               <button type="button" class="api-key-btn" id="btnSaveApiKey">Simpan Key</button>
+              <button type="button" class="api-key-btn btn-test" id="btnTestApiKey">Tes Koneksi</button>
               <button type="button" class="api-key-btn btn-secondary" id="btnClearApiKey">Hapus</button>
             </div>
+            <div class="api-key-test-feedback" id="apiKeyTestFeedback" role="status" aria-live="polite" hidden></div>
+            <div class="key-hint">Masukkan API key langsung di kolom ini. Jangan kirim atau menaruh key di chat maupun file kode.</div>
             <div class="key-hint">
-              <strong style="color:#fbbf24;">Format API Key yang Didukung:</strong><br>
-              🟢 <code>AIzaSy...</code> → <strong>Google Gemini 2.0 Flash</strong> — <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#38bdf8;">aistudio.google.com</a><br>
-              🟡 <code>sk-...</code> → <strong>OpenAI GPT-4o-mini</strong> — <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#38bdf8;">platform.openai.com</a><br>
-              🔵 <code>sk-ant-...</code> → <strong>Anthropic Claude 3 Haiku</strong> — <a href="https://console.anthropic.com/keys" target="_blank" style="color:#38bdf8;">console.anthropic.com</a><br>
+              <strong style="color:#34d399;">Opsi API gratis (pilih satu key):</strong><br>
+              🟢 <code>AQ....</code> / <code>AIzaSy...</code> → <strong>Gemini 3.8 Flash · free tier</strong> — <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Buat key Google AI Studio</a><br>
+              🟣 <code>gsk_...</code> → <strong>Groq GPT-OSS 20B · free plan</strong> — <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Buat key Groq</a><br>
+              🔵 <code>sk-or-v1-...</code> → <strong>OpenRouter Free Model Router</strong> — <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Buat key OpenRouter</a><br>
+              <em style="color:#94a3b8;">Aplikasi hanya menerima key dari tiga opsi gratis ini; key API berbayar tidak digunakan.</em><br>
               <em style="color:#64748b;">Tanpa key: sistem tetap berjalan menggunakan Kalkulasi Dinamis Lokal RECHEMON.</em>
             </div>
+            <div class="key-hint">Satu key aktif pada satu waktu; menyimpan key baru akan menggantinya. Key disimpan di browser pada perangkat ini. Free tier memiliki batas kuota. Google menyatakan konten dari tier gratis dapat digunakan untuk meningkatkan produk mereka; hindari data operasional yang rahasia. <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;">Detail ketentuan Gemini</a>.</div>
           </div>
 
           <!-- WASTE PRESETS & PROMPT -->
@@ -799,7 +805,7 @@
             <label class="section-label">Pilih Karakteristik Limbah Non-Standar / Tidak Pantas Jadi Paving
               Block:</label>
             <div class="waste-preset-chips" id="wastePresetChips">
-              <button type="button" class="preset-chip active" data-preset="mercury_toxic">
+              <button type="button" class="preset-chip" data-preset="mercury_toxic">
                 ☣️ Sludge B3 Merkuri & Timbal Tinggi
               </button>
               <button type="button" class="preset-chip" data-preset="petro_tar">
@@ -819,6 +825,10 @@
             <div class="custom-prompt-container">
               <textarea id="aiWastePromptInput" rows="3" class="ai-waste-textarea"
                 placeholder="Deskripsikan karakteristik limbah Anda di sini... (contoh: Mengandung merkuri 50 mg/L, arsenik tinggi, tidak stabil jika dicetak menjadi paving block)"></textarea>
+              <div class="waste-prompt-toolbar">
+                <span class="key-hint">Isian awal mengikuti profil limbah yang dipilih di simulator.</span>
+                <button type="button" class="api-key-btn btn-secondary" id="btnUseWasteProfilePrompt">↻ Gunakan profil utama</button>
+              </div>
             </div>
 
             <button type="button" id="btnRunAiWasteAnalysis" class="modal-confirm-btn btn-ai-gradient"
@@ -854,7 +864,7 @@
         <div class="ai-thinking-body">
           <div class="ai-thinking-header-row">
             <span class="ai-thinking-title">AI SEDANG KALKULASI</span>
-            <span class="ai-thinking-provider-badge" id="aiThinkingProvider">⚡ Gemini 2.0 Flash</span>
+            <span class="ai-thinking-provider-badge" id="aiThinkingProvider">⚡ Gemini 3.8 Flash</span>
           </div>
           <div class="ai-thinking-msg" id="aiThinkingMsg">Menghitung solusi terbaik...</div>
           <div class="ai-thinking-dots">
